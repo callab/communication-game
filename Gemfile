@@ -7,3 +7,5 @@ git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 # gem "rails"
 
 gem "puma", "~> 3.12"
+
+gem "faye-websocket", "~> 0.10.7"

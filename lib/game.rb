@@ -9,21 +9,26 @@ class Game
   end
 
   def start
-    puts @board.draw
-    puts
+    round
+  end
 
-    while true
-      puts "Player #{@current_player.id}, it is your turn."
-      puts "Enter coordinates to scan as x, y:"
+  def round
+    send_players @board.draw
 
-      input = gets.chomp
-      x, y = input.split(',')
+    @current_player.send "Player #{@current_player.id}, it is your turn."
+    @current_player.send "Enter coordinates to scan as x, y:"
 
+    @current_player.socket.on(:message) do |event|
+      x, y = event.data.split(',')
       @board.scan(x.to_i, y.to_i, @current_player.id)
-      puts @board.draw
-      puts
       swap_players
+      round
     end
+  end
+
+  def send_players(message)
+    @player_one.send(message)
+    @player_two.send(message)
   end
 
   def swap_players
@@ -32,5 +37,8 @@ class Game
     else
       @current_player = @player_one
     end
+
+    @player_one.socket.on(:message) { }
+    @player_two.socket.on(:message) { }
   end
 end

@@ -28,4 +28,9 @@ class Board
 
     str
   end
+
+  # Returns json representation of board state
+  def as_json
+    @state
+  end
 end

@@ -1,3 +1,4 @@
+require 'json'
 require_relative 'board'
 
 class Game
@@ -21,22 +22,19 @@ class Game
   end
 
   def begin_round
-    send_players @board.draw
-
-    @current_player.send "Player #{@current_player.id}, it is your turn."
-    @current_player.send "Enter coordinates to scan as x, y:"
-  end
-
-  def send_players(message)
-    @player_one.send(message)
-    @player_two.send(message)
+    @player_one.send(JSON.generate(as_json(@player_one)))
+    @player_two.send(JSON.generate(as_json(@player_two)))
   end
 
   def handle_input(player, event)
     message = event.data
     if player == @current_player
-      x, y = event.data.split(',')
+      move = JSON.parse(message)
+      x = move['row']
+      y = move['col']
       @board.scan(x.to_i, y.to_i, @current_player.id)
+      puts @board.draw
+      puts
       swap_players
       begin_round
     end
@@ -48,5 +46,15 @@ class Game
     else
       @current_player = @player_one
     end
+  end
+
+  def as_json(player)
+    is_current = @current_player == player
+
+    {
+      is_current: is_current,
+      player_id: player.id,
+      board: @board.as_json
+    }
   end
 end

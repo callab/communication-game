@@ -5,18 +5,22 @@ html, body {
 
 body {
     background-color: #efefef;
+    font-family: Helvetica, sans-serif;
 }
 
 header {
     color: white;
     background-color: #583958;
     overflow: hidden;
-    font-family: Helvetica, sans-serif;
 }
 
 h2 {
     margin: 0.5em 0;
     margin-left: 20px;
+}
+
+.message {
+    text-align: center;
 }
 
 table {
@@ -31,6 +35,18 @@ td {
     border: 1px solid black;
 }
 
+td.mine {
+    background-color: blue;
+}
+
+td.theirs {
+    background-color: red;
+}
+
 td:hover {
     background-color: beige;
+}
+
+.hidden {
+    display: none;
 }

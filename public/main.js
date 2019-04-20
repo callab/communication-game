@@ -1,6 +1,36 @@
-console.log("Setting up socket...");
+var connect = function() {
+  console.log("Setting up socket...");
 
-var socket = new WebSocket("ws://localhost:3000");
+  var socket = new WebSocket("ws://localhost:3000");
+
+  socket.onopen = function(ev) {
+    console.log("Connection established.");
+    setMessage('Connected. Finding another player...');
+  };
+
+  socket.onmessage = function(ev) {
+    console.log('Data received:');
+    console.log(ev.data);
+
+    var message = ev.data.trim();
+
+    if (message.length > 0) {
+      try {
+        var state = JSON.parse(message);
+      }
+      catch (e) {
+        return;
+      }
+
+      updateGame(state);
+    }
+  };
+
+  socket.onclose = function(ev) {
+    console.log('Disconnected.');
+    setMessage('Disconnected.');
+  };
+};
 
 var setMessage = window.setMessage = function(message) {
   var el = document.querySelector('.message');
@@ -48,37 +78,13 @@ var updateGame = function(state) {
   }
 };
 
-socket.onopen = function(ev) {
-  console.log("Connection established.");
-  setMessage('Connected. Finding another player...');
-};
-
-socket.onmessage = function(ev) {
-  console.log('Data received:');
-  console.log(ev.data);
-
-  var message = ev.data.trim();
-
-  if (message.length > 0) {
-    try {
-      var state = JSON.parse(message);
-    }
-    catch (e) {
-      return;
-    }
-
-    updateGame(state);
-  }
-};
-
-socket.onclose = function(ev) {
-  console.log('Disconnected.');
-  setMessage('Disconnected.');
-};
-
 var cells = document.querySelectorAll('td');
 cells.forEach(function(cell) {
   cell.addEventListener('click', function(ev) {
     send(JSON.stringify(tdIndex(ev.target)));
   });
 });
+
+if (document.querySelector('table.board')) {
+  connect();
+};

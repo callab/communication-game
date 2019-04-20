@@ -1,5 +1,6 @@
-const express = require('express');
-const exphbs = require('express-handlebars');
+const express = require('express'),
+      exphbs = require('express-handlebars'),
+      morgan = require('morgan');
 
 const app = express();
 const port = 3000;
@@ -11,6 +12,9 @@ let hbs = exphbs.create({
 
 app.engine('.hbs', hbs.engine);
 app.set('view engine', '.hbs');
+
+app.use(morgan('dev'));
+app.use(express.static('public'));
 
 app.get('/', (req, res) => {
   let date = new Date(Date.now());

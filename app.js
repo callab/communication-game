@@ -17,8 +17,12 @@ app.use(morgan('dev'));
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-  let date = new Date(Date.now());
-  res.render('index', { date: date.toDateString() });
+  let path = '/game';
+  res.render('index', { path: path });
+});
+
+app.get('/game', (req, res) => {
+  res.render('game');
 });
 
 app.listen(port, () => console.log(`App listening on port ${port}!`));

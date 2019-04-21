@@ -22,6 +22,12 @@ app.use(express.static('public'));
 
 app.use('/game', gameRouter);
 
+// Log errors
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  next(err);
+});
+
 app.get('/', (req, res) => {
   let path = '/game';
   res.render('index', { path: path });

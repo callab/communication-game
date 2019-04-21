@@ -13,7 +13,8 @@
     "express-ws": "^4.0.0",
     "handlebars": "^4.1.2",
     "morgan": "^1.9.1",
-    "passport": "^0.4.0"
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0"
   },
   "scripts": {
     "start": "node app.js"

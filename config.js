@@ -22,6 +22,9 @@ function configureTemplateEngine(app) {
 function configureMiddleware(app) {
   app.use(morgan('dev'));
   app.use(express.static('public'));
+  app.use(express.urlencoded({
+    extended: false
+  }));
 
   app.use(session({
     secret: 'foo-bar',

@@ -22,4 +22,9 @@ app.get('/', (req, res) => {
   res.render('index', { path: path });
 });
 
+app.get('/flash', (req, res) => {
+  req.flash('info', 'This is a flash message!');
+  res.redirect('/');
+});
+
 app.listen(port, () => console.log(`App listening on port ${port}!`));

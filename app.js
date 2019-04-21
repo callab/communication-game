@@ -9,7 +9,10 @@ configure(app);
 const expressWs = require('express-ws')(app);
 
 const gameRouter = require('./routes/game');
+const loginRouter = require('./routes/session');
+
 app.use('/game', gameRouter);
+app.use('/login', loginRouter);
 
 // Log errors
 app.use((err, req, res, next) => {

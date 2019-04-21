@@ -14,6 +14,10 @@ header {
     overflow: hidden;
 }
 
+main {
+    padding: 20px;
+}
+
 h2 {
     margin: 0.5em 0;
     margin-left: 20px;
@@ -49,4 +53,12 @@ td:hover {
 
 .hidden {
     display: none;
+}
+
+form label {
+    display: block;
+}
+
+form div {
+    margin-bottom: 20px;
 }

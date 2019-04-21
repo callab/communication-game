@@ -6,6 +6,7 @@
   "author": "Sinclair Target <sinclairtarget@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^3.0.6",
     "express": "^4.16.4",
     "express-flash": "^0.0.2",
     "express-handlebars": "^3.0.2",

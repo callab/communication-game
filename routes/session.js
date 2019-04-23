@@ -8,15 +8,13 @@ module.exports = function (app) {
     res.render('login');
   });
 
-  router.post('/', (req, res) => {
-    let username = req.body.username;
-    let password = req.body.password;
-
-    app.db.createUser(username, password, (user) => {
-      req.flash('info', `Successfully logged in as ${user.email}`);
-      res.redirect('/');
-    });
-  });
+  router.post('/',
+    app.passport.authenticate('local', {
+      successRedirect: '/',
+      failureRedirect: '/login',
+      failureFlash: true
+    })
+  );
 
   return router;
 };

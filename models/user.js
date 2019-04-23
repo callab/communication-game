@@ -4,6 +4,10 @@ class User {
     this.email = email;
     this.hashpwd = hashpwd;
   }
+
+  doesMatchPassword(password) {
+    return this.hashpwd === password;
+  }
 }
 
 module.exports = User;

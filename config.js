@@ -8,6 +8,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
 const DB = require('./db.js');
+const sessionLogger = require('./middleware/session-logger');
 
 module.exports = function configure(app) {
   configureDatabase(app);
@@ -34,10 +35,15 @@ function configureTemplateEngine(app) {
 
 function configureAuth(app) {
   passport.use(new LocalStrategy((username, password, done) => {
+    console.log('Verify callback.');
+
     app.db.findUserByEmail(username, (err, user) => {
       if (err) { return done(err); }
       if (!user) {
         return done(null, false, { message: 'Incorrect username' });
+      }
+      if (!user.doesMatchPassword(password)) {
+        return done(null, false, { message: 'Incorrect password' });
       }
       return done(null, user);
     });
@@ -48,7 +54,10 @@ function configureAuth(app) {
   });
 
   passport.deserializeUser((id, done) => {
+    console.log('Deserializing user with id: ' + id);
     app.db.findUser(id, (err, user) => {
+      console.log('Found user:');
+      console.log(user);
       done(err, user);
     });
   });
@@ -73,4 +82,6 @@ function configureMiddleware(app) {
 
   app.use(passport.initialize());
   app.use(passport.session());
+
+//  app.use(sessionLogger());
 }

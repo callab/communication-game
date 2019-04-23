@@ -1,5 +1,6 @@
 const express = require('express');
 const configure = require('./config');
+const requireUser = require('./middleware/require-user');
 const gameRouter = require('./routes/game');
 const sessionRouter = require('./routes/session');
 
@@ -19,9 +20,7 @@ app.use((err, req, res, next) => {
 });
 
 app.get('/',
-  app.passport.authenticate('local', {
-    failureRedirect: '/login'
-  }),
+  requireUser(),
   (req, res) => {
     let path = '/game';
     res.render('index', { path: path });

@@ -3,10 +3,12 @@ const exphbs = require('express-handlebars');
 const morgan = require('morgan');
 const session = require('express-session');
 const flash = require('express-flash');
+const DB = require('./db.js');
 
 module.exports = function configure(app) {
   configureTemplateEngine(app);
   configureMiddleware(app);
+  configureDatabase(app);
 }
 
 function configureTemplateEngine(app) {
@@ -33,4 +35,10 @@ function configureMiddleware(app) {
   }));
 
   app.use(flash());
+}
+
+function configureDatabase(app) {
+  app.db = new DB({
+    filename: 'store.db'
+  });
 }

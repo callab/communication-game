@@ -1,18 +1,16 @@
 const express = require('express');
 const configure = require('./config');
+const gameRouter = require('./routes/game');
+const sessionRouter = require('./routes/session');
 
-const app = express();
 const port = 3000;
-
+const app = express();
 configure(app);
 
 const expressWs = require('express-ws')(app);
 
-const gameRouter = require('./routes/game');
-const loginRouter = require('./routes/session');
-
-app.use('/game', gameRouter);
-app.use('/login', loginRouter);
+app.use('/game', gameRouter(app));
+app.use('/login', sessionRouter(app));
 
 // Log errors
 app.use((err, req, res, next) => {

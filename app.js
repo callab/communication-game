@@ -18,10 +18,15 @@ app.use((err, req, res, next) => {
   next(err);
 });
 
-app.get('/', (req, res) => {
-  let path = '/game';
-  res.render('index', { path: path });
-});
+app.get('/',
+  app.passport.authenticate('local', {
+    failureRedirect: '/login'
+  }),
+  (req, res) => {
+    let path = '/game';
+    res.render('index', { path: path });
+  }
+);
 
 app.get('/flash', (req, res) => {
   req.flash('info', 'This is a flash message!');

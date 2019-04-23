@@ -6,35 +6,53 @@ class DB {
     this.db = new sqlite3.Database(config.filename);
   }
 
-  findUser(id, callback = null) {
+  findUser(id, callback) {
     this.db.get("SELECT id, email, hashpwd FROM users WHERE id = ?",
                 id,
                 (err, row) => {
                   if (err) {
                     console.error(err);
+                    callback(err, null);
                   }
-                  else if (callback != null) {
-                    if (row) {
-                      let user = new User(row.id, row.email, row.hashpwd);
-                      callback(user);
-                    }
-                    else {
-                      callback(null);
-                    }
+                  else if (row) {
+                    let user = new User(row.id, row.email, row.hashpwd);
+                    callback(null, user);
+                  }
+                  else {
+                    callback(null, null);
                   }
                 });
   }
 
-  createUser(email, hashpwd, callback = null) {
+  findUserByEmail(email, callback) {
+    this.db.get("SELECT id, email, hashpwd FROM users WHERE email = ?",
+                email,
+                (err, row) => {
+                  if (err) {
+                    console.error(err);
+                    callback(err, null);
+                  }
+                  else if (row) {
+                    let user = new User(row.id, row.email, row.hashpwd);
+                    callback(null, user);
+                  }
+                  else {
+                    callback(null, null);
+                  }
+                });
+  }
+
+  createUser(email, hashpwd, callback) {
     this.db.run("INSERT INTO users (email, hashpwd) VALUES (?, ?)",
                 [email, hashpwd],
                 (err) => {
                   if (err) {
                     console.error(err);
+                    callback(err, null);
                   }
-                  else if (callback != null) {
+                  else {
                     let id = this.lastID;
-                    callback(new User(id, email, hashpwd));
+                    callback(null, new User(id, email, hashpwd));
                   }
                 });
   }

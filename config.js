@@ -3,12 +3,23 @@ const exphbs = require('express-handlebars');
 const morgan = require('morgan');
 const session = require('express-session');
 const flash = require('express-flash');
+
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+
 const DB = require('./db.js');
 
 module.exports = function configure(app) {
-  configureTemplateEngine(app);
-  configureMiddleware(app);
   configureDatabase(app);
+  configureTemplateEngine(app);
+  configureAuth(app);
+  configureMiddleware(app);
+}
+
+function configureDatabase(app) {
+  app.db = new DB({
+    filename: 'store.db'
+  });
 }
 
 function configureTemplateEngine(app) {
@@ -19,6 +30,30 @@ function configureTemplateEngine(app) {
 
   app.engine('.hbs', hbs.engine);
   app.set('view engine', '.hbs');
+}
+
+function configureAuth(app) {
+  passport.use(new LocalStrategy((username, password, done) => {
+    app.db.findUserByEmail(username, (err, user) => {
+      if (err) { return done(err); }
+      if (!user) {
+        return done(null, false, { message: 'Incorrect username' });
+      }
+      return done(null, user);
+    });
+  }));
+
+  passport.serializeUser((user, done) => {
+    done(null, user.id);
+  });
+
+  passport.deserializeUser((id, done) => {
+    app.db.findUser(id, (err, user) => {
+      done(err, user);
+    });
+  });
+
+  app.passport = passport;
 }
 
 function configureMiddleware(app) {
@@ -35,10 +70,7 @@ function configureMiddleware(app) {
   }));
 
   app.use(flash());
-}
 
-function configureDatabase(app) {
-  app.db = new DB({
-    filename: 'store.db'
-  });
+  app.use(passport.initialize());
+  app.use(passport.session());
 }

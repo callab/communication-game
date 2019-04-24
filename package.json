@@ -25,5 +25,9 @@
     "start": "node app.js",
     "db": "sqlite3 -batch store.db < schema.sql",
     "build": "webpack --mode development --context ./client --config ./client/webpack.config.js"
+  },
+  "devDependencies": {
+    "ts-loader": "^5.4.3",
+    "typescript": "^3.4.5"
   }
 }

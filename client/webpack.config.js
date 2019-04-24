@@ -18,7 +18,10 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin({
-      cleanOnceBeforeBuildPatterns: ['**/*', '!*.css']
+      cleanOnceBeforeBuildPatterns: ['*.js']
     })
-  ]
+  ],
+  resolve: {
+    extensions: ['.ts', '.js']
+  }
 };

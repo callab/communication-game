@@ -16,43 +16,17 @@ header {
 
 main {
     padding: 20px;
+    padding-top: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+#game-container {
 }
 
 h2 {
     margin: 0.5em 0;
     margin-left: 20px;
-}
-
-.message {
-    text-align: center;
-}
-
-table {
-    margin: auto;
-    margin-top: 60px;
-    border-collapse: collapse;
-}
-
-td {
-    height: 62px;
-    width: 62px;
-    border: 1px solid black;
-}
-
-td.mine {
-    background-color: blue;
-}
-
-td.theirs {
-    background-color: red;
-}
-
-td:hover {
-    background-color: beige;
-}
-
-.hidden {
-    display: none;
 }
 
 form label {

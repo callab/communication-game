@@ -12,6 +12,8 @@
     <main>
       {{{ body }}}
     </main>
-    <script src="main.js"></script>
+    {{#if clientPath}}
+      <script src="{{ clientPath }}"></script>
+    {{/if}}
   </body>
 </html>

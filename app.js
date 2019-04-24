@@ -1,12 +1,13 @@
 const express = require('express');
-const configure = require('./config');
+const init = require('./init');
+const config = require('./config.js');
 const requireUser = require('./middleware/require-user');
 const gameRouter = require('./routes/game');
 const sessionRouter = require('./routes/session');
 
 const port = 3000;
 const app = express();
-configure(app);
+init(app, config);
 
 const expressWs = require('express-ws')(app);
 

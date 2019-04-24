@@ -1,3 +1,4 @@
+const fs = require('fs');
 const express = require('express');
 const Player = require('../lib/player');
 const Game = require('../lib/game');
@@ -8,6 +9,45 @@ module.exports = function (app) {
   let router = express.Router();
 
   let clients = [];
+
+
+  router.get('/', (req, res) => {
+    let bundleName = app.config.clientBundleName;
+    if (!bundleName || bundleName.length == 0) {
+      console.error('ERROR: No clientBundleName provided in config.js');
+    }
+
+    fs.readdir('public', (err, files) => {
+      if (err)
+        throw err;
+
+      let rx = new RegExp('^' + bundleName + '\.*\.js$');
+      let bundleFilename = files.filter(filename => rx.test(filename))[0];
+      if (!bundleFilename || bundleFilename.length == 0) {
+        console.log('ERROR: No client bundle file found.');
+      }
+
+      res.render('game', { clientPath: bundleFilename });
+    });
+  });
+
+  router.ws('/socket', (ws, req) => {
+    console.log('Websocket request received.');
+    console.log(`Websocket state: ${ws.readyState}.`);
+
+    if (ws.readyState === WS_OPEN) {
+      handleClient(ws);
+    }
+    else {
+      ws.on('open', () => {
+        handleClient(ws);
+      });
+    }
+
+    ws.on('close', () => {
+      console.log('Websocket closed.');
+    });
+  });
 
   function handleClient(ws) {
     console.log('Websocket now open.');
@@ -30,28 +70,6 @@ module.exports = function (app) {
     let game = new Game(p1, p2);
     game.start();
   };
-
-  router.get('/', (req, res) => {
-    res.render('game/index');
-  });
-
-  router.ws('/socket', (ws, req) => {
-    console.log('Websocket request received.');
-    console.log(`Websocket state: ${ws.readyState}.`);
-
-    if (ws.readyState === WS_OPEN) {
-      handleClient(ws);
-    }
-    else {
-      ws.on('open', () => {
-        handleClient(ws);
-      });
-    }
-
-    ws.on('close', () => {
-      console.log('Websocket closed.');
-    });
-  });
 
   return router;
 };

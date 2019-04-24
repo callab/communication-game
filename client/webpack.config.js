@@ -8,6 +8,8 @@ module.exports = {
     filename: 'bundle.[contenthash].js'
   },
   plugins: [
-    new CleanWebpackPlugin()
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: ['**/*', '!*.css']
+    })
   ]
 };

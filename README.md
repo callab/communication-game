@@ -21,6 +21,8 @@ bundle should be output under the `/public` folder.)
 The backend service is an [express.js](https://expressjs.com/) application. In
 order to launch the application, you will first have to create the database.
 Running `yarn db` will load [the schema file](schema.sql) into a new database.
+(You must have [SQLite](https://www.sqlite.org/index.html) installed; you can
+easily install SQLite with [Homebrew](https://brew.sh/).)
 
 Once you have created the database, run `yarn start` to launch the server
 process.

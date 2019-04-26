@@ -17,16 +17,23 @@ header {
 main {
     padding: 20px;
     padding-top: 40px;
+}
+
+.flex-container {
     display: flex;
     justify-content: center;
 }
 
-#game-container {
-}
-
 h2 {
     margin: 0.5em 0;
+}
+
+header h2 {
     margin-left: 20px;
+}
+
+.message {
+    text-align: center;
 }
 
 form label {
@@ -35,4 +42,8 @@ form label {
 
 form div {
     margin-bottom: 20px;
+}
+
+.hidden {
+    display: none;
 }

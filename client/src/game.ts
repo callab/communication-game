@@ -1,5 +1,56 @@
 import * as Phaser from 'phaser';
 
+let socket = null;
+
+function connect() {
+  console.log("Setting up socket...");
+
+  let socket = new WebSocket("ws://localhost:3000/game/socket");
+
+  socket.onopen = function(ev) {
+    console.log("Connection established.");
+    setMessage('Connected. Finding another player...');
+  };
+
+  socket.onmessage = function(ev) {
+    console.log('Data received:');
+    console.log(ev.data);
+
+    let message = ev.data.trim();
+
+    if (message.length > 0) {
+      let state = null;
+
+      try {
+        state = JSON.parse(message);
+      }
+      catch (e) {
+        return;
+      }
+
+      updateGame(state);
+    }
+  };
+
+  socket.onclose = function(ev) {
+    console.log('Disconnected.');
+    setMessage('Disconnected.');
+  };
+
+  return socket;
+};
+
+function setMessage(message) {
+  let el = document.querySelector('.message');
+  el.textContent = message;
+}
+
+function send(message) {
+  console.log("Sending data:");
+  console.log(message);
+  socket.send(message);
+};
+
 const WIDTH = 800;
 const HEIGHT = 600;
 
@@ -46,25 +97,62 @@ function create() {
   marker = this.add.graphics();
   marker.lineStyle(3, 0xffffff, 1);
   marker.strokeRect(0, 0, map.tileWidth, map.tileHeight);
+
+  this.input.on('pointerdown', (pointer) => {
+    let tileCoord = tileXY(this, pointer);
+    let tile = map.getTileAt(tileCoord.x, tileCoord.y, false, 'ground');
+    if (tile) {
+      send(JSON.stringify({ row: tileCoord.x, col: tileCoord.y }));
+    }
+  });
+
+  socket = connect();
 }
 
 function update(time, delta) {
-  let worldPoint = this.input.activePointer.positionToCamera(this.cameras.main);
+  let tileCoord = tileXY(this, this.input.activePointer);
+  marker.x = map.tileToWorldX(tileCoord.x);
+  marker.y = map.tileToWorldY(tileCoord.y);
+}
+
+function updateGame(state) {
+  let container = document.querySelector('#game-container');
+  container.classList.remove('hidden');
+
+  for (let row = 0; row < state.board.width; row++) {
+    for (let col = 0; col < state.board.height; col++) {
+      let playerId = state.board.tiles[row][col];
+
+      let tile = map.getTileAt(row, col, false, 'ground');
+      if (tile) {
+        if (playerId == state.playerId) {
+          tile.tint = 0x007700;
+        }
+        else if (playerId > 0) {
+          tile.tint = 0x7777ff;
+        }
+        else {
+          tile.tint = 0xffffff;
+        }
+      }
+      else {
+        console.log('Could not find tile!');
+      }
+    }
+  }
+
+  if (state.isCurrent) {
+    setMessage('It is your turn. Pick a tile to scan.');
+  }
+  else {
+    setMessage('Waiting for the other player to scan a tile...');
+  }
+}
+
+function tileXY(scene, pointer) {
+  let worldPoint = pointer.positionToCamera(scene.cameras.main);
 
   let pointerTileX = map.worldToTileX(worldPoint.x);
   let pointerTileY = map.worldToTileY(worldPoint.y);
-
-  marker.x = map.tileToWorldX(pointerTileX);
-  marker.y = map.tileToWorldY(pointerTileY);
-
-  if (this.input.manager.activePointer.isDown) {
-    let tile = map.getTileAt(pointerTileX, pointerTileY, false, 'ground');
-    if (tile) {
-      console.log(`Found tile at (${pointerTileX}, ${pointerTileY}); changing tint!`);
-      tile.tint = 0xff0000;
-    }
-    else {
-      console.log(`Did not find tile at (${pointerTileX}, ${pointerTileY}).`);
-    }
-  }
+  return { x: pointerTileX, y: pointerTileY };
 }

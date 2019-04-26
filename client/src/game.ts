@@ -1,9 +1,12 @@
 import * as Phaser from 'phaser';
 
+const WIDTH = 800;
+const HEIGHT = 600;
+
 let config = {
   type: Phaser.AUTO,
-  width: 800,
-  height: 600,
+  width: WIDTH,
+  height: HEIGHT,
   parent: 'game-container',
   physics: {
     default: 'arcade',
@@ -20,28 +23,23 @@ let config = {
 let game = new Phaser.Game(config);
 
 function preload() {
-  this.load.image('callab', 'images/callab.png');
   this.load.image('sky', 'http://labs.phaser.io/assets/skies/space3.png');
-  this.load.image('logo', 'http://labs.phaser.io/assets/sprites/phaser3-logo.png');
-  this.load.image('red', 'http://labs.phaser.io/assets/particles/red.png');
+
+  this.load.image('grass', 'maps/tilesets/grass-tiles-2-small.png');
+  this.load.image('bushes', 'maps/tilesets/qubodup-bush_0.png');
+  this.load.tilemapTiledJSON('map', '../maps/map.json');
 }
 
 function create() {
   this.add.image(400, 300, 'sky');
 
-  let particles = this.add.particles('red');
+  const map = this.make.tilemap({ key: 'map' });
+  const groundTileset = map.addTilesetImage('grass', 'grass');
+  const floraTileset = map.addTilesetImage('qubodup-bush_0', 'bushes');
 
-  let emitter = particles.createEmitter({
-    speed: 100,
-    scale: { start: 1, end: 0 },
-    blendMode: 'ADD'
-  });
+  let x = WIDTH / 2 - map.widthInPixels / 2;
+  let y = HEIGHT / 2 - map.heightInPixels / 2;
 
-  let logo = this.physics.add.image(400, 100, 'callab');
-
-  logo.setVelocity(100, 200);
-  logo.setBounce(1, 1);
-  logo.setCollideWorldBounds(true);
-
-  emitter.startFollow(logo);
+  const groundLayer = map.createStaticLayer('ground', groundTileset, x, y);
+  const floraLayer = map.createStaticLayer('flora', floraTileset, x, y);
 }

@@ -5,7 +5,7 @@ const requireUser = require('./middleware/require-user');
 const gameRouter = require('./routes/game');
 const sessionRouter = require('./routes/session');
 
-const port = 3000;
+const port = config.port;
 const app = express();
 init(app, config);
 

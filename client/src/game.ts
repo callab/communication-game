@@ -5,7 +5,8 @@ let socket = null;
 function connect() {
   console.log("Setting up socket...");
 
-  let socket = new WebSocket("ws://localhost:3000/game/socket");
+  let host = window.location.host;
+  let socket = new WebSocket(`ws://${host}/game/socket`);
 
   socket.onopen = function(ev) {
     console.log("Connection established.");

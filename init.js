@@ -28,7 +28,10 @@ function initDatabase(app) {
 function initTemplateEngine(app) {
   let hbs = exphbs.create({
     defaultLayout: 'main',
-    extname: '.hbs'
+    extname: '.hbs',
+    helpers: {
+      commitTag: () => app.config.commitTag
+    }
   });
 
   app.engine('.hbs', hbs.engine);

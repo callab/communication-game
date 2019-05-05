@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const express = require('express');
 const init = require('./init');
 const config = require('./config.js');

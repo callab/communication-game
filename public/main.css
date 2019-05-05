@@ -47,3 +47,8 @@ form div {
 .hidden {
     display: none;
 }
+
+footer {
+    text-align: center;
+    color: gray;
+}

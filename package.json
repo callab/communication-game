@@ -24,7 +24,8 @@
     "start": "forever start app.js",
     "stop": "forever stop app.js",
     "db": "sqlite3 -batch store.db < schema.sql",
-    "build": "webpack --mode development --context ./client --config ./client/webpack.config.js"
+    "build": "webpack --mode development --context ./client --config ./client/webpack.config.js",
+    "build-prod": "webpack --mode production --context ./client --config ./client/webpack.config.js"
   },
   "devDependencies": {
     "clean-webpack-plugin": "^2.0.1",

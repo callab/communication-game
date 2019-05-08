@@ -1,40 +1,24 @@
 import * as Phaser from 'phaser';
+import { GameState } from './game-state';
+import { Socket } from './socket';
 
 let socket = null;
 
 function connect() {
   console.log("Setting up socket...");
 
-  let host = window.location.host;
-  let socket = new WebSocket(`ws://${host}/game/socket`);
+  let socket = new Socket('/game/socket');
+  (window as any).socket = socket;
 
-  socket.onopen = function(ev) {
-    console.log("Connection established.");
+  socket.onOpen = () => {
     setMessage('Connected. Finding another player...');
   };
 
-  socket.onmessage = function(ev) {
-    console.log('Data received:');
-    console.log(ev.data);
-
-    let message = ev.data.trim();
-
-    if (message.length > 0) {
-      let state = null;
-
-      try {
-        state = JSON.parse(message);
-      }
-      catch (e) {
-        return;
-      }
-
-      updateGame(state);
-    }
+  socket.onUpdate = (state) => {
+    updateGame(state);
   };
 
-  socket.onclose = function(ev) {
-    console.log('Disconnected.');
+  socket.onClose = () => {
     setMessage('Disconnected.');
   };
 
@@ -45,12 +29,6 @@ function setMessage(message) {
   let el = document.querySelector('.message');
   el.textContent = message;
 }
-
-function send(message) {
-  console.log("Sending data:");
-  console.log(message);
-  socket.send(message);
-};
 
 const WIDTH = 800;
 const HEIGHT = 600;
@@ -82,6 +60,11 @@ function preload() {
 
   this.load.image('grass', 'maps/tilesets/grass-tiles-2-small.png');
   this.load.tilemapTiledJSON('map', '../maps/next.json');
+
+  this.load.spritesheet('astronaut', 'images/astronaut_small.png', {
+    frameWidth: 32,
+    frameHeight: 32
+  });
 }
 
 function create() {
@@ -103,9 +86,12 @@ function create() {
     let tileCoord = tileXY(this, pointer);
     let tile = map.getTileAt(tileCoord.x, tileCoord.y, false, 'ground');
     if (tile) {
-      send(JSON.stringify({ row: tileCoord.x, col: tileCoord.y }));
+      socket.send(JSON.stringify({ row: tileCoord.x, col: tileCoord.y }));
     }
   });
+
+  let go = this.add.image(WIDTH / 2, HEIGHT / 2, 'astronaut', 0);
+  console.log(go);
 
   socket = connect();
 }

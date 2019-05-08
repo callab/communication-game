@@ -1,9 +1,16 @@
-import { GameObjects } from 'phaser';
+import { GameObjects, Tilemaps } from 'phaser';
 
 export class Avatar {
-  private go: GameObjects.Image;
+  private sprite: GameObjects.Sprite;
+  private map: Tilemaps.Tilemap;
 
-  constructor(go: GameObjects.Image) {
-    this.go = go;
+  constructor(sprite, map) {
+    this.sprite = sprite;
+    this.map = map;
+  }
+
+  moveToTile(x, y) {
+    let worldPoint = this.map.tileToWorldXY(x, y);
+    this.sprite.setPosition(worldPoint.x, worldPoint.y);
   }
 }

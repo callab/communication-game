@@ -15,6 +15,8 @@ export class MapScene extends Scene {
         game: 'game'
       }
     });
+
+    (window as any).mapScene = this;
   }
 
   preload() {
@@ -45,8 +47,8 @@ export class MapScene extends Scene {
     const groundLayer =
       this.map.createDynamicLayer('ground', groundTileset, x, y);
 
-    let go = this.add.image(width / 2, height / 2, 'astronaut', 0);
-    this.avatar = new Avatar(go);
+    let sprite = this.add.sprite(width / 2, height / 2, 'astronaut', 0);
+    this.avatar = new Avatar(sprite, this.map);
   }
 
   //  updateState(state) {
@@ -82,6 +84,10 @@ export class MapScene extends Scene {
   //      setMessage('Waiting for the other player to scan a tile...');
   //    }
   //  }
+
+  moveAvatar(x: number, y: number) {
+    this.avatar.moveToTile(x, y);
+  }
 
   private tileXY(scene, pointer) {
     let worldPoint = pointer.positionToCamera(scene.cameras.main);

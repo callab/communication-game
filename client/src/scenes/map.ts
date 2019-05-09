@@ -1,11 +1,20 @@
-import { Scene, Tilemaps, GameObjects } from 'phaser';
-import { Avatar } from '../avatar';
+import {
+  Scene,
+  Tilemaps,
+  GameObjects,
+  Input
+} from 'phaser';
+
+import { Avatar } from '../avatar/avatar';
 import { intOrStrToInt } from '../util';
+
+const KeyCodes = Input.Keyboard.KeyCodes;
 
 // Scene for map exploration part of the game
 export class MapScene extends Scene {
   private map: Tilemaps.Tilemap;
   private avatar: Avatar;
+  private keys: { [code: number]: Input.Keyboard.Key } = {};
 
   constructor() {
     super({
@@ -48,7 +57,20 @@ export class MapScene extends Scene {
       this.map.createDynamicLayer('ground', groundTileset, x, y);
 
     let sprite = this.add.sprite(width / 2, height / 2, 'astronaut', 0);
-    this.avatar = new Avatar(sprite, this.map);
+    this.avatar = new Avatar(sprite, this.map, 6);
+    this.registerKeyListeners();
+  }
+
+  update(time: number, deltaTime: number) {
+    this.avatar.handleInput(this.keys);
+    this.avatar.update(deltaTime);
+  }
+
+  registerKeyListeners() {
+    let keyCodes = [KeyCodes.UP, KeyCodes.DOWN, KeyCodes.LEFT, KeyCodes.RIGHT];
+    keyCodes.forEach((code) => {
+       this.keys[code] = this.input.keyboard.addKey(code);
+    });
   }
 
   //  updateState(state) {
@@ -84,10 +106,6 @@ export class MapScene extends Scene {
   //      setMessage('Waiting for the other player to scan a tile...');
   //    }
   //  }
-
-  moveAvatar(x: number, y: number) {
-    this.avatar.moveToTile(x, y);
-  }
 
   private tileXY(scene, pointer) {
     let worldPoint = pointer.positionToCamera(scene.cameras.main);

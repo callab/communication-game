@@ -34,8 +34,6 @@ export class Avatar {
 
     let newState = this.walkState.walk(directions);
     if (newState != null) {
-      console.log('Changing state!');
-      console.log(newState);
       this.walkState = newState;
     }
   }

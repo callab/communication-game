@@ -6,7 +6,7 @@ import {
 } from 'phaser';
 
 import { Avatar } from '../avatar/avatar';
-import { intOrStrToInt } from '../util';
+import * as Util from '../util';
 
 const KeyCodes = Input.Keyboard.KeyCodes;
 
@@ -47,8 +47,8 @@ export class MapScene extends Scene {
     const groundTileset =
       this.map.addTilesetImage('grass-tiles-2-small', 'grass');
 
-    let width = intOrStrToInt(this.game.config.width);
-    let height = intOrStrToInt(this.game.config.height);
+    let width = Util.intOrStrToInt(this.game.config.width);
+    let height = Util.intOrStrToInt(this.game.config.height);
 
     let x = width / 2 - this.map.widthInPixels / 2;
     let y = height / 2 - this.map.heightInPixels / 2;
@@ -56,8 +56,9 @@ export class MapScene extends Scene {
     const groundLayer =
       this.map.createDynamicLayer('ground', groundTileset, x, y);
 
-    let sprite = this.add.sprite(width / 2, height / 2, 'astronaut', 0);
-    this.avatar = new Avatar(sprite, this.map, 6);
+    let pos = Util.tileCenter(this.map, this.map.tileToWorldXY(0, 4));
+    let sprite = this.add.sprite(pos.x, pos.y, 'astronaut', 0);
+    this.avatar = new Avatar(sprite, this.map, 5);
     this.registerKeyListeners();
   }
 

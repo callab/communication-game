@@ -1,4 +1,5 @@
 import { GameObjects, Tilemaps, Input, Math as PhaserMath } from 'phaser';
+import * as Util from '../util';
 
 type Sprite = GameObjects.Sprite;
 type Tilemap = Tilemaps.Tilemap;
@@ -26,8 +27,11 @@ export abstract class WalkState {
   constructor(sprite: Sprite, map: Tilemap, direction: Direction, targetPos?: Vector2) {
     this.sprite = sprite;
     this.map = map;
-    this.direction = direction;
-    this.targetPos = targetPos || new PhaserMath.Vector2(this.sprite.x, this.sprite.y);
+
+    this.setTarget(
+      targetPos || new PhaserMath.Vector2(this.sprite.x, this.sprite.y),
+      direction
+    );
   }
 
   walk(directions: DirectionDict) {
@@ -45,8 +49,8 @@ export abstract class WalkState {
 
   abstract update(speed, deltaTime);
 
-  public calcTargetPos(direction: Direction) {
-    let tileCoord = this.map.worldToTileXY(this.sprite.x, this.sprite.y, false);
+  protected calcTargetPos(direction: Direction) {
+    let tileCoord = this.map.worldToTileXY(this.sprite.x, this.sprite.y);
 
     if (direction == Direction.Up) {
       tileCoord.y -= 1;
@@ -61,7 +65,21 @@ export abstract class WalkState {
       tileCoord.x += 1;
     }
 
-    return this.map.tileToWorldXY(tileCoord.x, tileCoord.y);
+    let rawPos = this.map.tileToWorldXY(tileCoord.x, tileCoord.y);
+    return Util.tileCenter(this.map, rawPos);
+  }
+
+  protected setTarget(targetPos: Vector2, direction: Direction) {
+    this.targetPos = targetPos;
+    this.direction = direction;
+
+    console.log('Set target pos!');
+    console.log(this.targetPos);
+  }
+
+  protected moveToTarget() {
+    this.sprite.x = this.targetPos.x;
+    this.sprite.y = this.targetPos.y;
   }
 }
 
@@ -81,16 +99,16 @@ export class VerticalState extends WalkState {
 
   walk(directions: DirectionDict) {
     if (directions[Direction.Up]) {
-      this.direction = Direction.Up;
-      this.targetPos = this.calcTargetPos(Direction.Up);
+      this.setTarget(this.calcTargetPos(Direction.Up), Direction.Up);
     }
 
     if (directions[Direction.Down]) {
-      this.direction = Direction.Down;
-      this.targetPos = this.calcTargetPos(Direction.Down);
+      this.setTarget(this.calcTargetPos(Direction.Down), Direction.Down);
     }
 
     if (this.done) {
+      this.moveToTarget();
+
       if (directions[Direction.Left]) {
         let targetPos = this.calcTargetPos(Direction.Left);
         return new HorizontalState(this.sprite, this.map, Direction.Left, targetPos);
@@ -106,7 +124,7 @@ export class VerticalState extends WalkState {
 
   update(speed, deltaTime) {
     if (this.done) {
-      this.sprite.y = this.targetPos.y;
+      this.moveToTarget();
       return;
     }
 
@@ -135,16 +153,16 @@ export class HorizontalState extends WalkState {
 
   walk(directions: DirectionDict) {
     if (directions[Direction.Left]) {
-      this.direction = Direction.Left;
-      this.targetPos = this.calcTargetPos(Direction.Left);
+      this.setTarget(this.calcTargetPos(Direction.Left), Direction.Left);
     }
 
     if (directions[Direction.Right]) {
-      this.direction = Direction.Right;
-      this.targetPos = this.calcTargetPos(Direction.Right);
+      this.setTarget(this.calcTargetPos(Direction.Right), Direction.Right);
     }
 
     if (this.done) {
+      this.moveToTarget();
+
       if (directions[Direction.Up]) {
         let targetPos = this.calcTargetPos(Direction.Up);
         return new VerticalState(this.sprite, this.map, Direction.Up, targetPos);
@@ -160,7 +178,7 @@ export class HorizontalState extends WalkState {
 
   update(speed, deltaTime) {
     if (this.done) {
-      this.sprite.x = this.targetPos.x;
+      this.moveToTarget();
       return;
     }
 

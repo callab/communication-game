@@ -1,4 +1,4 @@
-import { GameObjects, Tilemaps, Input, Math } from 'phaser';
+import { GameObjects, Tilemaps, Input, Math, Animations } from 'phaser';
 import {
   WalkState,
   VerticalState,
@@ -21,12 +21,17 @@ export class Avatar {
   private map: Tilemaps.Tilemap;
   private speed: number;                // In tiles per second
   private walkState: WalkState;
+  private animation: Animations.Animation;
 
-  constructor(sprite, map, speed = 1) {
+  constructor(sprite, animation, map, speed = 1) {
     this.sprite = sprite;
+    this.animation = animation;
     this.map = map;
     this.speed = speed;
-    this.walkState = new VerticalState(this.sprite, this.map, Direction.Up);
+    this.walkState = new VerticalState(this.sprite,
+                                       this.animation,
+                                       this.map,
+                                       Direction.Up);
   }
 
   handleInput(keys: KeyDict) {

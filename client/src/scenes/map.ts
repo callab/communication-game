@@ -58,7 +58,20 @@ export class MapScene extends Scene {
 
     let pos = Util.tileCenter(this.map, this.map.tileToWorldXY(0, 4));
     let sprite = this.add.sprite(pos.x, pos.y, 'astronaut', 0);
-    this.avatar = new Avatar(sprite, this.map, 5);
+
+    let animConfig = {
+      key: 'walk',
+      frames: this.anims.generateFrameNumbers('astronaut', {
+        start: 0,
+        end: 7,
+        first: 0
+      }),
+      frameRate: 12
+    };
+
+    let animation = this.anims.create(animConfig);
+
+    this.avatar = new Avatar(sprite, animation, this.map, 5);
     this.registerKeyListeners();
   }
 

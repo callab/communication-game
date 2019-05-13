@@ -156,11 +156,13 @@ export class HorizontalState extends WalkState {
 
   walk(directions: DirectionDict) {
     if (directions[Direction.Left]) {
+      this.sprite.setFlipX(true);
       this.sprite.anims.play('walk', true);
       this.setTarget(this.calcTargetPos(Direction.Left), Direction.Left);
     }
 
     if (directions[Direction.Right]) {
+      this.sprite.setFlipX(false);
       this.sprite.anims.play('walk', true);
       this.setTarget(this.calcTargetPos(Direction.Right), Direction.Right);
     }

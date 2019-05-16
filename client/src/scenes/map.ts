@@ -86,46 +86,4 @@ export class MapScene extends Scene {
        this.keys[code] = this.input.keyboard.addKey(code);
     });
   }
-
-  //  updateState(state) {
-  //    let container = document.querySelector('#game-container');
-  //    container.classList.remove('hidden');
-  //
-  //    for (let row = 0; row < state.board.width; row++) {
-  //      for (let col = 0; col < state.board.height; col++) {
-  //        let playerId = state.board.tiles[row][col];
-  //
-  //        let tile = map.getTileAt(row, col, false, 'ground');
-  //        if (tile) {
-  //          if (playerId == state.playerId) {
-  //            tile.tint = 0x007700;
-  //          }
-  //          else if (playerId > 0) {
-  //            tile.tint = 0x7777ff;
-  //          }
-  //          else {
-  //            tile.tint = 0xffffff;
-  //          }
-  //        }
-  //        else {
-  //          console.log('Could not find tile!');
-  //        }
-  //      }
-  //    }
-  //
-  //    if (state.isCurrent) {
-  //      setMessage('It is your turn. Pick a tile to scan.');
-  //    }
-  //    else {
-  //      setMessage('Waiting for the other player to scan a tile...');
-  //    }
-  //  }
-
-  private tileXY(scene, pointer) {
-    let worldPoint = pointer.positionToCamera(scene.cameras.main);
-
-    let pointerTileX = this.map.worldToTileX(worldPoint.x);
-    let pointerTileY = this.map.worldToTileY(worldPoint.y);
-    return { x: pointerTileX, y: pointerTileY };
-  }
 }

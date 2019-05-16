@@ -69,9 +69,9 @@ export class MapScene extends Scene {
       frameRate: 24
     };
 
-    let animation = this.anims.create(animConfig);
+    this.anims.create(animConfig);
 
-    this.avatar = new Avatar(sprite, animation, this.map, 5);
+    this.avatar = new Avatar(sprite, this.map, 5);
     this.registerKeyListeners();
   }
 

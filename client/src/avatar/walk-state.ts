@@ -1,4 +1,11 @@
-import { GameObjects, Tilemaps, Input, Math as PhaserMath, Animations } from 'phaser';
+import {
+  GameObjects,
+  Tilemaps,
+  Input,
+  Math as PhaserMath,
+  Animations
+} from 'phaser';
+
 import * as Util from '../util';
 
 type Sprite = GameObjects.Sprite;
@@ -20,14 +27,16 @@ type DirectionDict = { [dir: number]: boolean };
 // moving state moves object to given tile
 export abstract class WalkState {
   protected sprite: Sprite;
-  protected animation: Animations.Animation;
   protected map: Tilemap;
   protected direction: Direction;
   protected targetPos: Vector2;
 
-  constructor(sprite: Sprite, animation, map: Tilemap, direction: Direction, targetPos?: Vector2) {
+  constructor(sprite: Sprite,
+              map: Tilemap,
+              direction: Direction,
+              targetPos?: Vector2)
+  {
     this.sprite = sprite;
-    this.animation = animation;
     this.map = map;
 
     this.setTarget(
@@ -37,15 +46,6 @@ export abstract class WalkState {
   }
 
   walk(directions: DirectionDict) {
-    if (directions[Direction.Up]) {
-      let targetPos = this.calcTargetPos(Direction.Up);
-      return new VerticalState(this.sprite, this.animation, this.map, Direction.Up, targetPos);
-    }
-    else if (directions[Direction.Down]) {
-      let targetPos = this.calcTargetPos(Direction.Down);
-      return new VerticalState(this.sprite, this.animation, this.map, Direction.Down, targetPos);
-    }
-
     return null;
   }
 
@@ -92,8 +92,12 @@ export class VerticalState extends WalkState {
     }
   }
 
-  constructor(sprite: Sprite, animation, map: Tilemap, direction: Direction, targetPos?: Vector2) {
-    super(sprite, animation, map, direction, targetPos);
+  constructor(sprite: Sprite,
+              map: Tilemap,
+              direction: Direction,
+              targetPos?: Vector2)
+  {
+    super(sprite, map, direction, targetPos);
   }
 
   walk(directions: DirectionDict) {
@@ -114,11 +118,11 @@ export class VerticalState extends WalkState {
 
       if (directions[Direction.Left]) {
         let targetPos = this.calcTargetPos(Direction.Left);
-        return new HorizontalState(this.sprite, this.animation, this.map, Direction.Left, targetPos);
+        return new HorizontalState(this.sprite, this.map, Direction.Left, targetPos);
       }
       else if (directions[Direction.Right]) {
         let targetPos = this.calcTargetPos(Direction.Right);
-        return new HorizontalState(this.sprite, this.animation, this.map, Direction.Right, targetPos);
+        return new HorizontalState(this.sprite, this.map, Direction.Right, targetPos);
       }
     }
 
@@ -150,8 +154,12 @@ export class HorizontalState extends WalkState {
     }
   }
 
-  constructor(sprite: Sprite, animation, map: Tilemap, direction: Direction, targetPos?: Vector2) {
-    super(sprite, animation, map, direction, targetPos);
+  constructor(sprite: Sprite,
+              map: Tilemap,
+              direction: Direction,
+              targetPos?: Vector2)
+  {
+    super(sprite, map, direction, targetPos);
   }
 
   walk(directions: DirectionDict) {
@@ -174,11 +182,11 @@ export class HorizontalState extends WalkState {
 
       if (directions[Direction.Up]) {
         let targetPos = this.calcTargetPos(Direction.Up);
-        return new VerticalState(this.sprite, this.animation, this.map, Direction.Up, targetPos);
+        return new VerticalState(this.sprite, this.map, Direction.Up, targetPos);
       }
       else if (directions[Direction.Down]) {
         let targetPos = this.calcTargetPos(Direction.Down);
-        return new VerticalState(this.sprite, this.animation, this.map, Direction.Down, targetPos);
+        return new VerticalState(this.sprite, this.map, Direction.Down, targetPos);
       }
     }
 

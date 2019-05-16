@@ -13,7 +13,7 @@ type Tilemap = Tilemaps.Tilemap;
 type Vector2 = PhaserMath.Vector2;
 const KeyCodes = Input.Keyboard.KeyCodes;
 
-type KeyDict = { [code: number]: Input.Keyboard.Key };
+type KeyDict = { [code: number]: boolean };
 
 /*
  * State machine that handles input for the avatar.
@@ -44,16 +44,16 @@ export abstract class WalkState {
   }
 
   handleInput(keys: KeyDict) {
-    if (keys[KeyCodes.LEFT].isDown) {
+    if (keys[KeyCodes.LEFT]) {
       return new LeftState(this.sprite, this.map);
     }
-    else if (keys[KeyCodes.RIGHT].isDown) {
+    else if (keys[KeyCodes.RIGHT]) {
       return new RightState(this.sprite, this.map);
     }
-    else if (keys[KeyCodes.DOWN].isDown) {
+    else if (keys[KeyCodes.DOWN]) {
       return new DownState(this.sprite, this.map);
     }
-    else if (keys[KeyCodes.UP].isDown) {
+    else if (keys[KeyCodes.UP]) {
       return new UpState(this.sprite, this.map);
     }
 
@@ -89,16 +89,16 @@ export class StationaryState extends WalkState {
   }
 
   handleInput(keys: KeyDict) {
-    if (keys[KeyCodes.LEFT].isDown) {
+    if (keys[KeyCodes.LEFT]) {
       return new LeftState(this.sprite, this.map);
     }
-    else if (keys[KeyCodes.RIGHT].isDown) {
+    else if (keys[KeyCodes.RIGHT]) {
       return new RightState(this.sprite, this.map);
     }
-    else if (keys[KeyCodes.DOWN].isDown) {
+    else if (keys[KeyCodes.DOWN]) {
       return new DownState(this.sprite, this.map);
     }
-    else if (keys[KeyCodes.UP].isDown) {
+    else if (keys[KeyCodes.UP]) {
       return new UpState(this.sprite, this.map);
     }
 
@@ -127,10 +127,10 @@ export class UpState extends WalkState {
   }
 
   handleInput(keys: KeyDict) {
-    if (keys[KeyCodes.UP].isDown) {
+    if (keys[KeyCodes.UP]) {
       this.targetPos = this.calcTargetPos();
     }
-    else if (keys[KeyCodes.DOWN].isDown) {
+    else if (keys[KeyCodes.DOWN]) {
       return new DownState(this.sprite, this.map);
     }
 
@@ -163,10 +163,10 @@ export class DownState extends WalkState {
   }
 
   handleInput(keys: KeyDict) {
-    if (keys[KeyCodes.DOWN].isDown) {
+    if (keys[KeyCodes.DOWN]) {
       this.targetPos = this.calcTargetPos();
     }
-    else if (keys[KeyCodes.UP].isDown) {
+    else if (keys[KeyCodes.UP]) {
       return new UpState(this.sprite, this.map);
     }
 
@@ -200,10 +200,10 @@ export class LeftState extends WalkState {
   }
 
   handleInput(keys: KeyDict) {
-    if (keys[KeyCodes.LEFT].isDown) {
+    if (keys[KeyCodes.LEFT]) {
       this.targetPos = this.calcTargetPos();
     }
-    else if (keys[KeyCodes.RIGHT].isDown) {
+    else if (keys[KeyCodes.RIGHT]) {
       return new RightState(this.sprite, this.map);
     }
 
@@ -237,10 +237,10 @@ export class RightState extends WalkState {
   }
 
   handleInput(keys: KeyDict) {
-    if (keys[KeyCodes.RIGHT].isDown) {
+    if (keys[KeyCodes.RIGHT]) {
       this.targetPos = this.calcTargetPos();
     }
-    else if (keys[KeyCodes.LEFT].isDown) {
+    else if (keys[KeyCodes.LEFT]) {
       return new LeftState(this.sprite, this.map);
     }
 

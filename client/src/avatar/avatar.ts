@@ -4,7 +4,7 @@ import {
   StationaryState
 } from './walk-state';
 
-type KeyDict = { [code: number]: Input.Keyboard.Key };
+type KeyDict = { [code: number]: boolean };
 const Vector2 = Math.Vector2;
 const KeyCodes = Input.Keyboard.KeyCodes;
 

@@ -11,17 +11,9 @@ import * as Util from '../util';
 type Sprite = GameObjects.Sprite;
 type Tilemap = Tilemaps.Tilemap;
 type Vector2 = PhaserMath.Vector2;
+const KeyCodes = Input.Keyboard.KeyCodes;
 
 type KeyDict = { [code: number]: Input.Keyboard.Key };
-
-export enum Direction {
-  Up = 1,
-  Down,
-  Left,
-  Right
-}
-
-type DirectionDict = { [dir: number]: boolean };
 
 /*
  * State machine that handles input for the avatar.
@@ -51,17 +43,17 @@ export abstract class WalkState {
     console.log(`Entering ${this.constructor.name}.`);
   }
 
-  handleInput(directions: DirectionDict) {
-    if (directions[Direction.Left]) {
+  handleInput(keys: KeyDict) {
+    if (keys[KeyCodes.LEFT].isDown) {
       return new LeftState(this.sprite, this.map);
     }
-    else if (directions[Direction.Right]) {
+    else if (keys[KeyCodes.RIGHT].isDown) {
       return new RightState(this.sprite, this.map);
     }
-    else if (directions[Direction.Down]) {
+    else if (keys[KeyCodes.DOWN].isDown) {
       return new DownState(this.sprite, this.map);
     }
-    else if (directions[Direction.Up]) {
+    else if (keys[KeyCodes.UP].isDown) {
       return new UpState(this.sprite, this.map);
     }
 
@@ -96,17 +88,17 @@ export class StationaryState extends WalkState {
     super.enter();
   }
 
-  handleInput(directions: DirectionDict) {
-    if (directions[Direction.Left]) {
+  handleInput(keys: KeyDict) {
+    if (keys[KeyCodes.LEFT].isDown) {
       return new LeftState(this.sprite, this.map);
     }
-    else if (directions[Direction.Right]) {
+    else if (keys[KeyCodes.RIGHT].isDown) {
       return new RightState(this.sprite, this.map);
     }
-    else if (directions[Direction.Down]) {
+    else if (keys[KeyCodes.DOWN].isDown) {
       return new DownState(this.sprite, this.map);
     }
-    else if (directions[Direction.Up]) {
+    else if (keys[KeyCodes.UP].isDown) {
       return new UpState(this.sprite, this.map);
     }
 
@@ -134,16 +126,16 @@ export class UpState extends WalkState {
     super.enter();
   }
 
-  handleInput(directions: DirectionDict) {
-    if (directions[Direction.Up]) {
+  handleInput(keys: KeyDict) {
+    if (keys[KeyCodes.UP].isDown) {
       this.targetPos = this.calcTargetPos();
     }
-    else if (directions[Direction.Down]) {
+    else if (keys[KeyCodes.DOWN].isDown) {
       return new DownState(this.sprite, this.map);
     }
 
     if (this.done) {
-      return super.handleInput(directions);
+      return super.handleInput(keys);
     }
 
     return null;
@@ -170,16 +162,16 @@ export class DownState extends WalkState {
     super.enter();
   }
 
-  handleInput(directions: DirectionDict) {
-    if (directions[Direction.Down]) {
+  handleInput(keys: KeyDict) {
+    if (keys[KeyCodes.DOWN].isDown) {
       this.targetPos = this.calcTargetPos();
     }
-    else if (directions[Direction.Up]) {
+    else if (keys[KeyCodes.UP].isDown) {
       return new UpState(this.sprite, this.map);
     }
 
     if (this.done) {
-      return super.handleInput(directions);
+      return super.handleInput(keys);
     }
 
     return null;
@@ -207,16 +199,16 @@ export class LeftState extends WalkState {
     super.enter();
   }
 
-  handleInput(directions: DirectionDict) {
-    if (directions[Direction.Left]) {
+  handleInput(keys: KeyDict) {
+    if (keys[KeyCodes.LEFT].isDown) {
       this.targetPos = this.calcTargetPos();
     }
-    else if (directions[Direction.Right]) {
+    else if (keys[KeyCodes.RIGHT].isDown) {
       return new RightState(this.sprite, this.map);
     }
 
     if (this.done) {
-      return super.handleInput(directions);
+      return super.handleInput(keys);
     }
 
     return null;
@@ -245,16 +237,16 @@ export class RightState extends WalkState {
     super.enter();
   }
 
-  handleInput(directions: DirectionDict) {
-    if (directions[Direction.Right]) {
+  handleInput(keys: KeyDict) {
+    if (keys[KeyCodes.RIGHT].isDown) {
       this.targetPos = this.calcTargetPos();
     }
-    else if (directions[Direction.Left]) {
+    else if (keys[KeyCodes.LEFT].isDown) {
       return new LeftState(this.sprite, this.map);
     }
 
     if (this.done) {
-      return super.handleInput(directions);
+      return super.handleInput(keys);
     }
 
     return null;

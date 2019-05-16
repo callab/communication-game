@@ -15,6 +15,8 @@ export class Socket {
     this.ws.onopen = this.handleOnOpen;
     this.ws.onmessage = this.handleOnMessage;
     this.ws.onclose = this.handleOnClose;
+
+    this.setStatus('Connecting...');
   }
 
   send(message: string) {
@@ -26,13 +28,13 @@ export class Socket {
   // These handler functions need to be written this way so that "this" points
   // to the object instance. Sad!
   handleOnOpen = (ev: Event) => {
-    console.log("Connection established.");
+    this.setStatus('Connected.');
     this.onOpen();
   }
 
   handleOnMessage = (ev: MessageEvent) => {
-    console.log('Data received:');
-    console.log(ev.data);
+    //console.log('Data received:');
+    //console.log(ev.data);
 
     let message = ev.data.trim();
     if (message.length > 0) {
@@ -51,7 +53,12 @@ export class Socket {
   }
 
   handleOnClose = (ev: Event) => {
-    console.log('Disconnected.');
+    this.setStatus('Connection closed.');
     this.onClose();
+  }
+
+  setStatus(statusMessage) {
+    let el = document.querySelector('.message');
+    el.textContent = statusMessage;
   }
 }

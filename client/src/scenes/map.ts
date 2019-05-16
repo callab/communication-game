@@ -5,6 +5,7 @@ import {
   Input
 } from 'phaser';
 
+import { Socket } from '../socket';
 import { Avatar } from '../avatar/avatar';
 import * as Util from '../util';
 
@@ -15,6 +16,7 @@ export class MapScene extends Scene {
   private map: Tilemaps.Tilemap;
   private avatar: Avatar;
   private keys: { [code: number]: Input.Keyboard.Key } = {};
+  private socket: Socket;
 
   constructor() {
     super({
@@ -24,6 +26,8 @@ export class MapScene extends Scene {
         game: 'game'
       }
     });
+
+    this.socket = new Socket('/game/socket');
 
     (window as any).mapScene = this;
   }

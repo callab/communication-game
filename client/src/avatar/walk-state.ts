@@ -40,7 +40,7 @@ export abstract class WalkState {
   abstract targetTileCoord(current: Vector2);
 
   enter() {
-    console.log(`Entering ${this.constructor.name}.`);
+    //console.log(`Entering ${this.constructor.name}.`);
   }
 
   handleInput(keys: KeyDict) {
@@ -231,7 +231,6 @@ export class RightState extends WalkState {
   }
 
   enter() {
-    console.log(this.sprite.anims.getRepeat());
     this.sprite.anims.play('walk', true);
     this.sprite.setFlipX(false);
     super.enter();

@@ -19,10 +19,18 @@ export class Socket {
     this.setStatus('Connecting...');
   }
 
+  sendInput(keysDown: { [code: number]: boolean }) {
+    let str = JSON.stringify({
+      keys: keysDown
+    });
+
+    this.send(str);
+  }
+
   send(message: string) {
     console.log("Sending data:");
     console.log(message);
-    this.ws.send(message);
+    //this.ws.send(message);
   }
 
   // These handler functions need to be written this way so that "this" points

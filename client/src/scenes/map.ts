@@ -32,6 +32,17 @@ export class MapScene extends Scene {
     (window as any).mapScene = this;
   }
 
+  // Returns a dictionary mapping key codes to a boolean value indicating
+  // whether the key is down this frame.
+  get keysDown() {
+    let dict = {};
+    for (let keyCode in this.keys) {
+      dict[keyCode] = this.keys[keyCode].isDown;
+    }
+
+    return dict;
+  }
+
   preload() {
     this.load.image('sky', 'http://labs.phaser.io/assets/skies/space3.png');
 
@@ -81,6 +92,8 @@ export class MapScene extends Scene {
   }
 
   update(time: number, deltaTime: number) {
+    let keysDown = this.keysDown;
+    this.socket.sendInput(keysDown);
     this.avatar.handleInput(this.keys);
     this.avatar.update(deltaTime);
   }
@@ -91,4 +104,5 @@ export class MapScene extends Scene {
        this.keys[code] = this.input.keyboard.addKey(code);
     });
   }
+
 }

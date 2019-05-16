@@ -66,7 +66,8 @@ export class MapScene extends Scene {
         end: 7,
         first: 0
       }),
-      frameRate: 24
+      frameRate: 24,
+      repeat: -1
     };
 
     this.anims.create(animConfig);

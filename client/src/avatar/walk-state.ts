@@ -23,187 +23,240 @@ export enum Direction {
 
 type DirectionDict = { [dir: number]: boolean };
 
-// Stationary state, then horizontal/vertical state
-// moving state moves object to given tile
+/*
+ * State machine that handles input for the avatar.
+ *
+ * Input handling changes depending on whether the avatar is traveling
+ * horizontally or vertically. A state in the state machine, when given inputs
+ * for a frame, must determine how the inputs affect the direction vector and
+ * whether a new state should be entered.
+ */
 export abstract class WalkState {
+  public targetPos: Vector2;
   protected sprite: Sprite;
   protected map: Tilemap;
-  protected direction: Direction;
-  protected targetPos: Vector2;
 
-  constructor(sprite: Sprite,
-              map: Tilemap,
-              direction: Direction,
-              targetPos?: Vector2)
+  constructor(sprite: Sprite, map: Tilemap)
   {
     this.sprite = sprite;
     this.map = map;
-
-    this.setTarget(
-      targetPos || new PhaserMath.Vector2(this.sprite.x, this.sprite.y),
-      direction
-    );
+    this.targetPos = this.calcTargetPos();
   }
 
-  walk(directions: DirectionDict) {
-    return null;
+  abstract get done();
+
+  abstract targetTileCoord(current: Vector2);
+
+  enter() {
+    console.log(`Entering ${this.constructor.name}.`);
   }
 
-  abstract update(speed, deltaTime);
+  handleInput(directions: DirectionDict) {
+    if (directions[Direction.Left]) {
+      return new LeftState(this.sprite, this.map);
+    }
+    else if (directions[Direction.Right]) {
+      return new RightState(this.sprite, this.map);
+    }
+    else if (directions[Direction.Down]) {
+      return new DownState(this.sprite, this.map);
+    }
+    else if (directions[Direction.Up]) {
+      return new UpState(this.sprite, this.map);
+    }
 
-  protected calcTargetPos(direction: Direction) {
+    return new StationaryState(this.sprite, this.map);
+  }
+
+  protected calcTargetPos() {
     let tileCoord = this.map.worldToTileXY(this.sprite.x, this.sprite.y);
-
-    if (direction == Direction.Up) {
-      tileCoord.y -= 1;
-    }
-    else if (direction == Direction.Down) {
-      tileCoord.y += 1;
-    }
-    else if (direction == Direction.Left) {
-      tileCoord.x -= 1;
-    }
-    else if (direction == Direction.Right) {
-      tileCoord.x += 1;
-    }
-
+    tileCoord = this.targetTileCoord(tileCoord);
     let rawPos = this.map.tileToWorldXY(tileCoord.x, tileCoord.y);
     return Util.tileCenter(this.map, rawPos);
   }
-
-  protected setTarget(targetPos: Vector2, direction: Direction) {
-    this.targetPos = targetPos;
-    this.direction = direction;
-  }
-
-  protected moveToTarget() {
-    this.sprite.x = this.targetPos.x;
-    this.sprite.y = this.targetPos.y;
-  }
 }
 
-export class VerticalState extends WalkState {
-  get done() {
-    if (this.direction == Direction.Up) {
-      return this.sprite.y <= this.targetPos.y;
-    }
-    else if (this.direction == Direction.Down) {
-      return this.sprite.y >= this.targetPos.y;
-    }
-  }
-
-  constructor(sprite: Sprite,
-              map: Tilemap,
-              direction: Direction,
-              targetPos?: Vector2)
+export class StationaryState extends WalkState {
+  constructor(sprite: Sprite, map: Tilemap)
   {
-    super(sprite, map, direction, targetPos);
+    super(sprite, map);
   }
 
-  walk(directions: DirectionDict) {
-    if (directions[Direction.Up]) {
-      this.sprite.anims.play('walk', true);
-      this.setTarget(this.calcTargetPos(Direction.Up), Direction.Up);
-    }
-
-    if (directions[Direction.Down]) {
-      this.sprite.anims.play('walk', true);
-      this.setTarget(this.calcTargetPos(Direction.Down), Direction.Down);
-    }
-
-    if (this.done) {
-      this.moveToTarget();
-      this.sprite.anims.stop();
-      this.sprite.setFrame(0);
-
-      if (directions[Direction.Left]) {
-        let targetPos = this.calcTargetPos(Direction.Left);
-        return new HorizontalState(this.sprite, this.map, Direction.Left, targetPos);
-      }
-      else if (directions[Direction.Right]) {
-        let targetPos = this.calcTargetPos(Direction.Right);
-        return new HorizontalState(this.sprite, this.map, Direction.Right, targetPos);
-      }
-    }
-
-    return null;
-  }
-
-  update(speed, deltaTime) {
-    if (this.done) {
-      this.moveToTarget();
-      return;
-    }
-
-    if (this.direction == Direction.Up) {
-      this.sprite.y -= speed * this.map.tileHeight * deltaTime / 1000;
-    }
-    else if (this.direction == Direction.Down) {
-      this.sprite.y += speed * this.map.tileHeight * deltaTime / 1000;
-    }
-  }
-}
-
-export class HorizontalState extends WalkState {
   get done() {
-    if (this.direction == Direction.Left) {
-      return this.sprite.x <= this.targetPos.x;
-    }
-    else if (this.direction == Direction.Right) {
-      return this.sprite.x >= this.targetPos.x;
-    }
+    return true;
   }
 
-  constructor(sprite: Sprite,
-              map: Tilemap,
-              direction: Direction,
-              targetPos?: Vector2)
-  {
-    super(sprite, map, direction, targetPos);
+  targetTileCoord(current: Vector2) {
+    return current;
   }
 
-  walk(directions: DirectionDict) {
+  enter() {
+    this.sprite.anims.stop();
+    this.sprite.setFrame(0);
+    super.enter();
+  }
+
+  handleInput(directions: DirectionDict) {
     if (directions[Direction.Left]) {
-      this.sprite.setFlipX(true);
-      this.sprite.anims.play('walk', true);
-      this.setTarget(this.calcTargetPos(Direction.Left), Direction.Left);
+      return new LeftState(this.sprite, this.map);
     }
-
-    if (directions[Direction.Right]) {
-      this.sprite.setFlipX(false);
-      this.sprite.anims.play('walk', true);
-      this.setTarget(this.calcTargetPos(Direction.Right), Direction.Right);
+    else if (directions[Direction.Right]) {
+      return new RightState(this.sprite, this.map);
     }
-
-    if (this.done) {
-      this.moveToTarget();
-      this.sprite.anims.stop();
-      this.sprite.setFrame(0);
-
-      if (directions[Direction.Up]) {
-        let targetPos = this.calcTargetPos(Direction.Up);
-        return new VerticalState(this.sprite, this.map, Direction.Up, targetPos);
-      }
-      else if (directions[Direction.Down]) {
-        let targetPos = this.calcTargetPos(Direction.Down);
-        return new VerticalState(this.sprite, this.map, Direction.Down, targetPos);
-      }
+    else if (directions[Direction.Down]) {
+      return new DownState(this.sprite, this.map);
+    }
+    else if (directions[Direction.Up]) {
+      return new UpState(this.sprite, this.map);
     }
 
     return null;
   }
+}
 
-  update(speed, deltaTime) {
+export class UpState extends WalkState {
+  constructor(sprite: Sprite, map: Tilemap)
+  {
+    super(sprite, map);
+  }
+
+  get done() {
+    return this.sprite.y < this.targetPos.y;
+  }
+
+  targetTileCoord(current: Vector2) {
+    current.y -= 1;
+    return current;
+  }
+
+  enter() {
+    this.sprite.anims.play('walk', true);
+    super.enter();
+  }
+
+  handleInput(directions: DirectionDict) {
+    if (directions[Direction.Up]) {
+      this.targetPos = this.calcTargetPos();
+    }
+    else if (directions[Direction.Down]) {
+      return new DownState(this.sprite, this.map);
+    }
+
     if (this.done) {
-      this.moveToTarget();
-      return;
+      return super.handleInput(directions);
     }
 
-    if (this.direction == Direction.Left) {
-      this.sprite.x -= speed * this.map.tileWidth * deltaTime / 1000;
+    return null;
+  }
+}
+
+export class DownState extends WalkState {
+  constructor(sprite: Sprite, map: Tilemap)
+  {
+    super(sprite, map);
+  }
+
+  get done() {
+    return this.sprite.y > this.targetPos.y;
+  }
+
+  targetTileCoord(current: Vector2) {
+    current.y += 1;
+    return current;
+  }
+
+  enter() {
+    this.sprite.anims.play('walk', true);
+    super.enter();
+  }
+
+  handleInput(directions: DirectionDict) {
+    if (directions[Direction.Down]) {
+      this.targetPos = this.calcTargetPos();
     }
-    else if (this.direction == Direction.Right) {
-      this.sprite.x += speed * this.map.tileWidth * deltaTime / 1000;
+    else if (directions[Direction.Up]) {
+      return new UpState(this.sprite, this.map);
     }
+
+    if (this.done) {
+      return super.handleInput(directions);
+    }
+
+    return null;
+  }
+}
+
+export class LeftState extends WalkState {
+  constructor(sprite: Sprite, map: Tilemap)
+  {
+    super(sprite, map);
+  }
+
+  get done() {
+    return this.sprite.x < this.targetPos.x;
+  }
+
+  targetTileCoord(current: Vector2) {
+    current.x -= 1;
+    return current;
+  }
+
+  enter() {
+    this.sprite.anims.play('walk', true);
+    this.sprite.setFlipX(true);
+    super.enter();
+  }
+
+  handleInput(directions: DirectionDict) {
+    if (directions[Direction.Left]) {
+      this.targetPos = this.calcTargetPos();
+    }
+    else if (directions[Direction.Right]) {
+      return new RightState(this.sprite, this.map);
+    }
+
+    if (this.done) {
+      return super.handleInput(directions);
+    }
+
+    return null;
+  }
+}
+
+export class RightState extends WalkState {
+  constructor(sprite: Sprite, map: Tilemap)
+  {
+    super(sprite, map);
+  }
+
+  get done() {
+    return this.sprite.x > this.targetPos.x;
+  }
+
+  targetTileCoord(current: Vector2) {
+    current.x += 1;
+    return current;
+  }
+
+  enter() {
+    console.log(this.sprite.anims.getRepeat());
+    this.sprite.anims.play('walk', true);
+    this.sprite.setFlipX(false);
+    super.enter();
+  }
+
+  handleInput(directions: DirectionDict) {
+    if (directions[Direction.Right]) {
+      this.targetPos = this.calcTargetPos();
+    }
+    else if (directions[Direction.Left]) {
+      return new LeftState(this.sprite, this.map);
+    }
+
+    if (this.done) {
+      return super.handleInput(directions);
+    }
+
+    return null;
   }
 }

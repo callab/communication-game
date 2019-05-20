@@ -25,15 +25,12 @@ export class MapScene extends Scene {
   constructor() {
     super({
       key: 'map',
-      active: true,
+      active: false,
+      visible: false,
       mapAdd: {
         game: 'game'
       }
     });
-
-    this.socket = new Socket('/game/socket');
-
-    (window as any).mapScene = this;
   }
 
   // Returns a dictionary mapping key codes to a boolean value indicating
@@ -93,6 +90,8 @@ export class MapScene extends Scene {
 
     this.avatar = new Avatar(sprite, this.map, 5);
     this.registerKeyListeners();
+
+    this.socket = new Socket('/game/socket');
     this.socket.onUpdate = this.updateAuthoritative;
   }
 

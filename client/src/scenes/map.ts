@@ -16,6 +16,7 @@ const KeyCodes = Input.Keyboard.KeyCodes;
 export class MapScene extends Scene {
   private map: Tilemaps.Tilemap;
   private avatar: Avatar;
+  private avatars: Map<number, Avatar> = new Map<number, Avatar>();
   private keys: { [code: number]: Input.Keyboard.Key } = {};
   private socket: Socket;
 
@@ -102,7 +103,22 @@ export class MapScene extends Scene {
 
   updateAuthoritative = (state: GameModel) => {
     console.log(state);
-    this.avatar.updateAuthoritative(state.avatars[0]);
+
+    if (!this.avatars.get(state.clientId)) {
+      this.avatars.set(state.clientId, this.avatar);
+    }
+
+    state.avatars.forEach((model) => {
+      let avatar = this.avatars.get(model.clientId);
+      if (!avatar) {
+        let pos = model.position;
+        let sprite = this.add.sprite(pos.x, pos.y, 'astronaut', 0);
+        avatar = new Avatar(sprite, this.map, 5);
+        this.avatars.set(model.clientId, avatar);
+      }
+
+      avatar.updateAuthoritative(model);
+    });
   }
 
   registerKeyListeners() {

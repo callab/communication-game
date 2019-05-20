@@ -104,8 +104,6 @@ export class MapScene extends Scene {
   }
 
   updateAuthoritative = (state: GameModel) => {
-    console.log(state);
-
     if (!this.avatars.get(state.clientId)) {
       this.avatars.set(state.clientId, this.avatar);
     }

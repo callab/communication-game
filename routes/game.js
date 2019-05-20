@@ -47,6 +47,10 @@ module.exports = function (app) {
   });
 
   function handleClient(ws) {
+    if (app.game.stopped) {
+      app.game = new Game();
+    }
+
     app.game.addClient(ws);
   };
 

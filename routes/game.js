@@ -1,15 +1,12 @@
 const fs = require('fs');
 const express = require('express');
-const Player = require('../lib/player');
+const Client = require('../lib/client');
 const Game = require('../lib/game');
 
 const WS_OPEN = 1;
 
 module.exports = function (app) {
   let router = express.Router();
-
-  let clients = [];
-
 
   router.get('/', (req, res) => {
     let bundleName = app.config.clientBundleName;
@@ -50,25 +47,7 @@ module.exports = function (app) {
   });
 
   function handleClient(ws) {
-    console.log('Websocket now open.');
-    ws.send('Waiting for another player...');
-
-    clients.push(ws);
-
-    if (clients.length >= 2) {
-      launchGame();
-    }
-  };
-
-  function launchGame() {
-    console.log('Launching game.');
-
-    let ws1 = clients.shift();
-    let ws2 = clients.shift();
-    let p1 = new Player(1, ws1);
-    let p2 = new Player(2, ws2);
-    let game = new Game(p1, p2);
-    game.start();
+    app.game.addClient(ws);
   };
 
   return router;

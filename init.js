@@ -8,6 +8,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
 const DB = require('./db.js');
+const Game = require('./lib/game.js');
 const sessionLogger = require('./middleware/session-logger');
 
 module.exports = function init(app, config) {
@@ -17,6 +18,7 @@ module.exports = function init(app, config) {
   initTemplateEngine(app);
   initAuth(app);
   initMiddleware(app);
+  initGame(app);
 }
 
 function initDatabase(app) {
@@ -89,4 +91,8 @@ function initMiddleware(app) {
   app.use(passport.session());
 
 //  app.use(sessionLogger());
+}
+
+function initGame(app) {
+  app.game = new Game();
 }

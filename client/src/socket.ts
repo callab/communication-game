@@ -28,9 +28,9 @@ export class Socket {
   }
 
   send(message: string) {
-    console.log("Sending data:");
-    console.log(message);
-    //this.ws.send(message);
+    //console.log("Sending data:");
+    //console.log(message);
+    this.ws.send(message);
   }
 
   // These handler functions need to be written this way so that "this" points

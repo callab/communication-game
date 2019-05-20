@@ -1,11 +1,11 @@
-import { GameState } from './game-state';
+import { GameModel } from './models/game-model';
 
 export class Socket {
   ws: WebSocket;
 
   // Initialize these as no-ops.
   onOpen: () => void = () => {};
-  onUpdate: (state: GameState) => void = () => {};
+  onUpdate: (state: GameModel) => void = () => {};
   onClose: () => void = () => {};
 
   constructor(path: string) {
@@ -55,7 +55,7 @@ export class Socket {
         return;
       }
 
-      let state = new GameState(jsonObj);
+      let state = new GameModel(jsonObj);
       this.onUpdate(state);
     }
   }

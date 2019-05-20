@@ -3,6 +3,7 @@ import {
   WalkState,
   StationaryState
 } from './walk-state';
+import { AvatarModel } from '../models/avatar-model';
 
 type KeyDict = { [code: number]: boolean };
 const Vector2 = Math.Vector2;
@@ -45,6 +46,10 @@ export class Avatar {
     dir.scale(this.speed * this.map.tileHeight * deltaTime / 1000);
     spritePos.add(dir);
     this.moveToPosition(spritePos);
+  }
+
+  updateAuthoritative(model: AvatarModel) {
+    this.moveToPosition(model.position);
   }
 
   setWalkState(state: WalkState) {

@@ -7,6 +7,7 @@ import {
 
 import { Socket } from '../socket';
 import { Avatar } from '../avatar/avatar';
+import { GameModel } from '../models/game-model';
 import * as Util from '../util';
 
 const KeyCodes = Input.Keyboard.KeyCodes;
@@ -89,13 +90,19 @@ export class MapScene extends Scene {
 
     this.avatar = new Avatar(sprite, this.map, 5);
     this.registerKeyListeners();
+    this.socket.onUpdate = this.updateAuthoritative;
   }
 
   update(time: number, deltaTime: number) {
     let keysDown = this.keysDown;
     this.socket.sendInput(keysDown);
-    this.avatar.handleInput(keysDown);
-    this.avatar.update(deltaTime);
+    //this.avatar.handleInput(keysDown);
+    //this.avatar.update(deltaTime);
+  }
+
+  updateAuthoritative = (state: GameModel) => {
+    console.log(state);
+    this.avatar.updateAuthoritative(state.avatars[0]);
   }
 
   registerKeyListeners() {

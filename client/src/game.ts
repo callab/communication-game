@@ -1,5 +1,4 @@
 import * as Phaser from 'phaser';
-import { GameState } from './game-state';
 import { MapScene } from './scenes/scenes';
 
 const WIDTH = 800;

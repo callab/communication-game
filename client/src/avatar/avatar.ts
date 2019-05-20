@@ -16,10 +16,13 @@ export class Avatar {
   private speed: number;                // In tiles per second
   private walkState: WalkState;
 
-  constructor(sprite, map, speed = 1) {
+  constructor(sprite, map, speed = 1, tint = 0xffffff) {
     this.sprite = sprite;
     this.map = map;
     this.speed = speed;
+
+    this.sprite.tint = tint;
+
     this.walkState = new StationaryState(this.sprite, this.map);
     this.walkState.enter();
   }

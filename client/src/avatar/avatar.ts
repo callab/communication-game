@@ -53,6 +53,21 @@ export class Avatar {
 
   updateAuthoritative(model: AvatarModel) {
     this.moveToPosition(model.position);
+
+    if (model.direction.x === 0 && model.direction.y === 0) {
+      this.sprite.anims.stop();
+      this.sprite.setFrame(0);
+    }
+    else {
+      this.sprite.anims.play('walk', true);
+    }
+
+    if (model.direction.x > 0) {
+      this.sprite.setFlipX(false);
+    }
+    else if (model.direction.x < 0) {
+      this.sprite.setFlipX(true);
+    }
   }
 
   setWalkState(state: WalkState) {

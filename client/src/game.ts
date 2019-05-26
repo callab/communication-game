@@ -1,5 +1,9 @@
 import * as Phaser from 'phaser';
-import { MapScene, SplashScene } from './scenes/scenes';
+import {
+  MapScene,
+  SplashScene,
+  HUDScene
+} from './scenes/scenes';
 
 const WIDTH = 800;
 const HEIGHT = 600;
@@ -15,7 +19,7 @@ let config = {
       gravity: { y: 200 }
     }
   },
-  scene: [ SplashScene, MapScene ]
+  scene: [ SplashScene, MapScene, HUDScene ]
 };
 
 let game = new Phaser.Game(config);

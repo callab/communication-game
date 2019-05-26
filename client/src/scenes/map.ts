@@ -93,6 +93,8 @@ export class MapScene extends Scene {
 
     this.socket = new Socket('/game/socket');
     this.socket.onUpdate = this.updateAuthoritative;
+
+    this.scene.launch('hud');
   }
 
   update(time: number, deltaTime: number) {

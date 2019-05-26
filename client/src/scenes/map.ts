@@ -67,7 +67,7 @@ export class MapScene extends Scene {
     let height = Util.intOrStrToInt(this.game.config.height);
 
     let x = width / 2 - this.map.widthInPixels / 2;
-    let y = height / 2 - this.map.heightInPixels / 2;
+    let y = height / 2 - this.map.heightInPixels / 2 + 18;
 
     const groundLayer =
       this.map.createDynamicLayer('ground', groundTileset, x, y);

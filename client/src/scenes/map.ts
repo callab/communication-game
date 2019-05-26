@@ -8,6 +8,7 @@ import {
 import { Socket } from '../socket';
 import { Avatar } from '../avatar/avatar';
 import { GameModel } from '../models/game-model';
+import { Timer } from '../timer';
 import * as Util from '../util';
 
 const KeyCodes = Input.Keyboard.KeyCodes;
@@ -21,6 +22,7 @@ export class MapScene extends Scene {
   private avatars: Map<number, Avatar> = new Map<number, Avatar>();
   private keys: { [code: number]: Input.Keyboard.Key } = {};
   private socket: Socket;
+  private timer: Timer;
 
   constructor() {
     super({
@@ -94,7 +96,8 @@ export class MapScene extends Scene {
     this.socket = new Socket('/game/socket');
     this.socket.onUpdate = this.updateAuthoritative;
 
-    this.scene.launch('hud');
+    this.timer = new Timer(60 * 1000);
+    this.scene.launch('hud', { timer: this.timer });
   }
 
   update(time: number, deltaTime: number) {

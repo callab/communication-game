@@ -1,6 +1,9 @@
 import {
-  Scene
+  Scene,
+  GameObjects
 } from 'phaser';
+
+import { Timer } from '../timer';
 
 import * as Util from '../util';
 
@@ -10,6 +13,9 @@ const TOP_BAR_BORDER_COLOR = 0x00b792;
 
 // This is a "UI scene" that renders above the map scene showing UI elements.
 export class HUDScene extends Scene {
+  private timer: Timer;
+  private clock: GameObjects.Text;
+
   constructor() {
     super({
       key: 'hud',
@@ -18,6 +24,10 @@ export class HUDScene extends Scene {
         game: 'game'
       }
     });
+  }
+
+  init(data) {
+    this.timer = data.timer;
   }
 
   preload() { }
@@ -30,5 +40,16 @@ export class HUDScene extends Scene {
                        TOP_BAR_BG_COLOR, 1);
     this.add.rectangle(width / 2, TOP_BAR_HEIGHT, width, 2,
                        TOP_BAR_BORDER_COLOR, 1);
+
+    this.clock =
+      this.add.text(width - 40, TOP_BAR_HEIGHT / 2, this.timer.clockDigits())
+              .setFontSize(24)
+              .setColor('#000000')
+              .setOrigin(0.5, 0.5);
+  }
+
+  update(time, deltaTime) {
+    this.timer.update(deltaTime);
+    this.clock.text = this.timer.clockDigits();
   }
 }

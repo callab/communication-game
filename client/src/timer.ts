@@ -13,14 +13,14 @@ export class Timer {
   }
 
   update(deltaTime) {
-    if (this.stopped) {
-      return;
-    }
-
     if (this.timeRemaining > 0) {
       this.timeRemaining -= deltaTime;
     }
-    else {
+  }
+
+  updateAuthoritative(timeRemaining) {
+    this.timeRemaining = timeRemaining;
+    if (this.timeRemaining <= 0 && !this.stopped) {
       this.stopped = true;
       this.notifyListeners();
     }

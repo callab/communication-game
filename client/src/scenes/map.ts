@@ -105,8 +105,11 @@ export class MapScene extends Scene {
     this.socket.sendInput(keysDown);
     //this.avatar.handleInput(keysDown);
     //this.avatar.update(deltaTime);
+
+    //this.timer.update(deltaTime);
   }
 
+  // Update based on response from server
   updateAuthoritative = (state: GameModel) => {
     if (!this.avatars.get(state.clientId)) {
       this.avatars.set(state.clientId, this.avatar);
@@ -124,6 +127,8 @@ export class MapScene extends Scene {
 
       avatar.updateAuthoritative(model);
     });
+
+    this.timer.updateAuthoritative(state.timeRemaining);
   }
 
   registerKeyListeners() {

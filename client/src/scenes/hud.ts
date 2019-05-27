@@ -49,7 +49,6 @@ export class HUDScene extends Scene {
   }
 
   update(time, deltaTime) {
-    this.timer.update(deltaTime);
     this.clock.text = this.timer.clockDigits();
   }
 }

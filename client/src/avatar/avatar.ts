@@ -15,6 +15,11 @@ export class Avatar {
   private direction: Math.Vector2 = new Math.Vector2(0, 0);
   private speed: number;                // In tiles per second
   private walkState: WalkState;
+  private isDigging: boolean;
+
+  get position() {
+    return this.sprite.getCenter();
+  }
 
   constructor(sprite, map, speed = 1, tint = 0xffffff) {
     this.sprite = sprite;
@@ -68,6 +73,8 @@ export class Avatar {
     else if (model.direction.x < 0) {
       this.sprite.setFlipX(true);
     }
+
+    this.isDigging = model.isDigging;
   }
 
   setWalkState(state: WalkState) {

@@ -137,7 +137,14 @@ export class MapScene extends Scene {
   }
 
   registerKeyListeners() {
-    let keyCodes = [KeyCodes.UP, KeyCodes.DOWN, KeyCodes.LEFT, KeyCodes.RIGHT];
+    let keyCodes = [
+      KeyCodes.UP,
+      KeyCodes.DOWN,
+      KeyCodes.LEFT,
+      KeyCodes.RIGHT,
+      KeyCodes.SPACE
+    ];
+
     keyCodes.forEach((code) => {
        this.keys[code] = this.input.keyboard.addKey(code);
     });

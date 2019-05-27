@@ -96,10 +96,10 @@ function initMiddleware(app) {
 }
 
 function initGame(app) {
-  app.game = new Game();
-
   // load server map
   let path = 'server-maps/next.json';
   let str = fs.readFileSync(path);
-  app.game.map = new Map(JSON.parse(str));
+  let map = new Map(JSON.parse(str));
+
+  app.game = new Game(map);
 }

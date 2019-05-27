@@ -30,7 +30,9 @@ export class HUDScene extends Scene {
     this.timer = data.timer;
   }
 
-  preload() { }
+  preload() {
+    this.load.image('ore-icon', 'images/ore.png');
+  }
 
   create() {
     let width = Util.intOrStrToInt(this.game.config.width);
@@ -46,6 +48,12 @@ export class HUDScene extends Scene {
               .setFontSize(24)
               .setColor('#000000')
               .setOrigin(0.5, 0.5);
+
+    let oreIcon = this.add.image(20, TOP_BAR_HEIGHT / 2, 'ore-icon');
+    let oreNum = this.add.text(40, TOP_BAR_HEIGHT / 2, '0')
+                         .setFontSize(24)
+                         .setColor('#000000')
+                         .setOrigin(0.5, 0.5);
   }
 
   update(time, deltaTime) {

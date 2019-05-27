@@ -1,5 +1,6 @@
 import { GameObjects, Tilemaps, Input, Math, Animations } from 'phaser';
 import { AvatarModel } from '../models/avatar-model';
+import { OreFlasher } from './ore-flasher';
 
 type KeyDict = { [code: number]: boolean };
 const Vector2 = Math.Vector2;
@@ -11,6 +12,7 @@ export class Avatar {
   private direction: Math.Vector2 = new Math.Vector2(0, 0);
   private speed: number;                // In tiles per second
   private isDigging: boolean;
+  private oreFlasher: OreFlasher;
 
   /*
    * The server only thinks of position relative to the top left of the map,
@@ -36,18 +38,25 @@ export class Avatar {
     this.sprite = sprite;
     this.map = map;
     this.speed = speed;
-
     this.sprite.tint = tint;
+    this.oreFlasher = new OreFlasher(this.map);
   }
 
   handleInput(keys: KeyDict) { }
 
-  update(deltaTime: number) {
-    let spritePos = this.sprite.getCenter();
-    let dir = this.direction.clone();
-    dir.scale(this.speed * this.map.tileHeight * deltaTime / 1000);
-    spritePos.add(dir);
-    this.sprite.setPosition(spritePos.x, spritePos.y);
+  update(time: number, deltaTime: number) {
+    //let spritePos = this.sprite.getCenter();
+    //let dir = this.direction.clone();
+    //dir.scale(this.speed * this.map.tileHeight * deltaTime / 1000);
+    //spritePos.add(dir);
+    //this.sprite.setPosition(spritePos.x, spritePos.y);
+
+    if (this.isDigging) {
+      this.tryFlashOre(time);
+    }
+    else {
+      this.oreFlasher.reset();
+    }
   }
 
   updateAuthoritative(model: AvatarModel) {
@@ -69,5 +78,11 @@ export class Avatar {
     }
 
     this.isDigging = model.isDigging;
+  }
+
+  tryFlashOre(time: number) {
+    let spritePos = this.sprite.getCenter();
+    let tilePos = this.map.worldToTileXY(spritePos.x, spritePos.y);
+    this.oreFlasher.tryFlashOre(tilePos, time);
   }
 }

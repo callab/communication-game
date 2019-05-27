@@ -115,7 +115,7 @@ export class MapScene extends Scene {
     let keysDown = this.keysDown;
     this.socket.sendInput(keysDown);
     //this.avatar.handleInput(keysDown);
-    //this.avatar.update(deltaTime);
+    this.avatar.update(time, deltaTime);
 
     //this.timer.update(deltaTime);
   }

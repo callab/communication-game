@@ -4,6 +4,8 @@ import {
 
 import * as Util from '../util';
 
+const BUTTON_COLOR = 0x00b792;
+
 export class SplashScene extends Scene {
   constructor() {
     super({
@@ -28,7 +30,7 @@ export class SplashScene extends Scene {
                                     height / 2,
                                     200,
                                     120,
-                                    0xffff00,
+                                    BUTTON_COLOR,
                                     1);
 
     this.add.text(width / 2, height / 2, 'Play')

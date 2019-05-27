@@ -141,6 +141,10 @@ export class MapScene extends Scene {
 
     this.timer.updateAuthoritative(state.timeRemaining);
     this.updateMap(state.map);
+
+    if (this.timer.stopped) {
+      this.transitionToScoreScene();
+    }
   }
 
   updateMap(map: MapModel) {
@@ -169,6 +173,15 @@ export class MapScene extends Scene {
 
     keyCodes.forEach((code) => {
        this.keys[code] = this.input.keyboard.addKey(code);
+    });
+  }
+
+  transitionToScoreScene() {
+    this.socket.close();
+    this.scene.stop('hud');
+    this.scene.start('score', {
+      ores: 4,
+      teamOres: 9
     });
   }
 }

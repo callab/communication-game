@@ -2,6 +2,7 @@ const fs = require('fs');
 const express = require('express');
 const Client = require('../lib/client');
 const Game = require('../lib/game');
+const Map = require('../lib/map');
 
 const WS_OPEN = 1;
 
@@ -48,7 +49,11 @@ module.exports = function (app) {
 
   function handleClient(ws) {
     if (app.game.stopped) {
-      app.game = new Game();
+      // load server map
+      let path = 'server-maps/next.json';
+      let str = fs.readFileSync(path);
+      let map = new Map(JSON.parse(str));
+      app.game = new Game(map);
     }
 
     app.game.addClient(ws);

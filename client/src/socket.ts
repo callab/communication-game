@@ -77,4 +77,8 @@ export class Socket {
   addListener(listener: (state: GameModel) => void) {
     this.updateListeners.push(listener);
   }
+
+  close() {
+    this.ws.close();
+  }
 }

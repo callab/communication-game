@@ -12,7 +12,6 @@ export class Avatar {
   private speed: number;                // In tiles per second
   private isDigging: boolean;
 
-
   /*
    * The server only thinks of position relative to the top left of the map,
    * while the client deals with position relative to the top left of the game

@@ -123,10 +123,10 @@ export class MapScene extends Scene {
     state.avatars.forEach((model) => {
       let avatar = this.avatars.get(model.clientId);
       if (!avatar) {
-        let pos = model.position;
-        let sprite = this.add.sprite(pos.x, pos.y, 'astronaut', 0);
+        let sprite = this.add.sprite(0, 0, 'astronaut', 0);
         let tint = TINTS[(model.clientId - 1) % TINTS.length];
         avatar = new Avatar(sprite, this.map, 5, tint);
+        avatar.mapRelativePosition = model.position;
         this.avatars.set(model.clientId, avatar);
       }
 

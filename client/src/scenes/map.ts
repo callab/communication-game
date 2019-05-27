@@ -143,7 +143,7 @@ export class MapScene extends Scene {
     this.updateMap(state.map);
 
     if (this.timer.stopped) {
-      this.transitionToScoreScene();
+      this.transitionToScoreScene(state);
     }
   }
 
@@ -176,12 +176,18 @@ export class MapScene extends Scene {
     });
   }
 
-  transitionToScoreScene() {
+  transitionToScoreScene(state) {
     this.socket.close();
     this.scene.stop('hud');
+
+    let myOres = state.client.inventory.ores;
+    let teamOres = state.clients.reduce((sum, client) => {
+      return sum + client.inventory.ores;
+    }, 0);
+
     this.scene.start('score', {
-      ores: 4,
-      teamOres: 9
+      ores: myOres,
+      teamOres: teamOres
     });
   }
 }

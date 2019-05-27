@@ -5,7 +5,7 @@ export class Socket {
 
   // Initialize these as no-ops.
   onOpen: () => void = () => {};
-  onUpdate: (state: GameModel) => void = () => {};
+  updateListeners: Array<(state: GameModel) => void> = [];
   onClose: () => void = () => {};
 
   constructor(path: string) {
@@ -58,7 +58,9 @@ export class Socket {
       }
 
       let state = new GameModel(jsonObj);
-      this.onUpdate(state);
+      this.updateListeners.forEach((listener) => {
+        listener(state);
+      });
     }
   }
 
@@ -70,5 +72,9 @@ export class Socket {
   setStatus(statusMessage) {
     let el = document.querySelector('.message');
     el.textContent = statusMessage;
+  }
+
+  addListener(listener: (state: GameModel) => void) {
+    this.updateListeners.push(listener);
   }
 }

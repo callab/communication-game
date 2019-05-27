@@ -100,10 +100,15 @@ export class MapScene extends Scene {
     this.registerKeyListeners();
 
     this.socket = new Socket('/game/socket');
-    this.socket.onUpdate = this.updateAuthoritative;
+    this.socket.addListener((state) => {
+      this.updateAuthoritative(state);
+    });
 
     this.timer = new Timer(60 * 1000);
-    this.scene.launch('hud', { timer: this.timer });
+    this.scene.launch('hud', {
+      timer: this.timer,
+      socket: this.socket
+    });
   }
 
   update(time: number, deltaTime: number) {
@@ -116,7 +121,7 @@ export class MapScene extends Scene {
   }
 
   // Update based on response from server
-  updateAuthoritative = (state: GameModel) => {
+  updateAuthoritative(state: GameModel) {
     if (!this.avatars.get(state.clientId)) {
       this.avatars.set(state.clientId, this.avatar);
     }

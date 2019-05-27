@@ -4,6 +4,8 @@ import {
 } from 'phaser';
 
 import { Timer } from '../timer';
+import { Socket } from '../socket';
+import { GameModel } from '../models/game-model';
 
 import * as Util from '../util';
 
@@ -15,6 +17,8 @@ const TOP_BAR_BORDER_COLOR = 0x00b792;
 export class HUDScene extends Scene {
   private timer: Timer;
   private clock: GameObjects.Text;
+  private socket: Socket;
+  private oreText: GameObjects.Text;
 
   constructor() {
     super({
@@ -28,6 +32,10 @@ export class HUDScene extends Scene {
 
   init(data) {
     this.timer = data.timer;
+    this.socket = data.socket;
+    this.socket.addListener((state) => {
+      this.updateAuthoritative(state);
+    });
   }
 
   preload() {
@@ -50,13 +58,18 @@ export class HUDScene extends Scene {
               .setOrigin(0.5, 0.5);
 
     let oreIcon = this.add.image(20, TOP_BAR_HEIGHT / 2, 'ore-icon');
-    let oreNum = this.add.text(40, TOP_BAR_HEIGHT / 2, '0')
-                         .setFontSize(24)
-                         .setColor('#000000')
-                         .setOrigin(0.5, 0.5);
+    this.oreText = this.add.text(40, TOP_BAR_HEIGHT / 2, '0')
+                           .setFontSize(24)
+                           .setColor('#000000')
+                           .setOrigin(0.5, 0.5);
   }
 
   update(time, deltaTime) {
     this.clock.text = this.timer.clockDigits();
+  }
+
+  updateAuthoritative(state: GameModel) {
+    let ores = state.client.inventory.ores;
+    this.oreText.text = ores.toString();
   }
 }

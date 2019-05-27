@@ -1,3 +1,4 @@
+const fs = require('fs');
 const express = require('express');
 const exphbs = require('express-handlebars');
 const morgan = require('morgan');
@@ -7,8 +8,9 @@ const flash = require('express-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
-const DB = require('./db.js');
-const Game = require('./lib/game.js');
+const DB = require('./db');
+const Game = require('./lib/game');
+const Map = require('./lib/map');
 const sessionLogger = require('./middleware/session-logger');
 
 module.exports = function init(app, config) {
@@ -95,4 +97,9 @@ function initMiddleware(app) {
 
 function initGame(app) {
   app.game = new Game();
+
+  // load server map
+  let path = 'server-maps/next.json';
+  let str = fs.readFileSync(path);
+  app.game.map = new Map(JSON.parse(str));
 }

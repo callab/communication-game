@@ -61,6 +61,9 @@ export class MapScene extends Scene {
   }
 
   create() {
+    this.avatars = new Map<number, Avatar>();
+    this.keys = {};
+
     this.add.image(400, 300, 'sky');
 
     this.map = this.make.tilemap({ key: 'map' });
@@ -177,8 +180,7 @@ export class MapScene extends Scene {
   }
 
   transitionToScoreScene(state) {
-    this.socket.close();
-    this.scene.stop('hud');
+    this.shutdown();
 
     let myOres = state.client.inventory.ores;
     let teamOres = state.clients.reduce((sum, client) => {
@@ -189,5 +191,15 @@ export class MapScene extends Scene {
       ores: myOres,
       teamOres: teamOres
     });
+  }
+
+  shutdown() {
+    this.socket.close();
+    this.socket = null;
+    this.timer = null;
+    this.map = null;
+    this.avatar = null;
+    this.avatars = null;
+    this.scene.stop('hud');
   }
 }

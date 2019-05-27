@@ -67,6 +67,8 @@ export class Socket {
   handleOnClose = (ev: Event) => {
     this.setStatus('Connection closed.');
     this.onClose();
+
+    this.updateListeners = [];
   }
 
   setStatus(statusMessage) {

@@ -50,6 +50,7 @@ export class MapScene extends Scene {
     this.load.image('sky', 'http://labs.phaser.io/assets/skies/space3.png');
 
     this.load.image('grass', 'maps/tilesets/grass-tiles-2-small.png');
+    this.load.image('ore', 'maps/tilesets/ore.png');
     this.load.tilemapTiledJSON('map', '../maps/next.json');
 
     this.load.spritesheet('astronaut', 'images/astronaut_small.png', {
@@ -64,6 +65,8 @@ export class MapScene extends Scene {
     this.map = this.make.tilemap({ key: 'map' });
     const groundTileset =
       this.map.addTilesetImage('grass-tiles-2-small', 'grass');
+    const oreTileset =
+      this.map.addTilesetImage('ore', 'ore');
 
     let width = Util.intOrStrToInt(this.game.config.width);
     let height = Util.intOrStrToInt(this.game.config.height);
@@ -73,6 +76,8 @@ export class MapScene extends Scene {
 
     const groundLayer =
       this.map.createDynamicLayer('ground', groundTileset, x, y);
+    const oreLayer =
+      this.map.createDynamicLayer('ore', oreTileset, x, y);
 
     let pos = Util.tileCenter(this.map, this.map.tileToWorldXY(0, 4));
     let sprite = this.add.sprite(pos.x, pos.y, 'astronaut', 0);

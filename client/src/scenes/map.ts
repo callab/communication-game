@@ -8,6 +8,7 @@ import {
 import { Socket } from '../socket';
 import { Avatar } from '../avatar/avatar';
 import { GameModel } from '../models/game-model';
+import { MapModel } from '../models/map-model';
 import { Timer } from '../timer';
 import * as Util from '../util';
 
@@ -134,6 +135,22 @@ export class MapScene extends Scene {
     });
 
     this.timer.updateAuthoritative(state.timeRemaining);
+    this.updateMap(state.map);
+  }
+
+  updateMap(map: MapModel) {
+    for (let row = 0; row < this.map.height; row++) {
+      for (let col = 0; col < this.map.width; col++) {
+        if (this.map.hasTileAt(col, row, 'ore')) {
+          let val = map.state[row][col];
+
+          if (val == 0) {
+            // need to remove this ore
+            this.map.removeTileAt(col, row, true, true, 'ore');
+          }
+        }
+      }
+    }
   }
 
   registerKeyListeners() {

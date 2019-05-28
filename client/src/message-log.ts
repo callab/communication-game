@@ -9,11 +9,12 @@ export class MessageLog {
       return this.messages[this.messages.length - 1].indexNumber;
     }
     else {
-      return 0;
+      return -1;
     }
   }
 
   sendMessage(msg) {
+    console.log(`Sending message: ${msg}`);
     this.pendingMessages.push(msg);
   };
 
@@ -30,6 +31,10 @@ export class MessageLog {
         this.pendingMessages.splice(index, 1);
       }
     });
+  }
+
+  messagesSince(index) {
+    return this.messages.slice(index + 1);
   }
 
   asJSON() {

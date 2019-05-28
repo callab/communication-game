@@ -1,7 +1,11 @@
+import { MessageModel } from './models/message-model';
+import { MessageLog } from './message-log';
+
 export class MessageUI {
   ui: HTMLElement;
   input: HTMLInputElement;
   onInput: (inputVal) => void = (inputVal) => {};
+  lastMessageIndex: number = -1;
 
   constructor() {
     this.ui = document.querySelector('.message-ui');
@@ -15,6 +19,26 @@ export class MessageUI {
     });
 
     this.input.value = '';
+  }
+
+  update(messageLog: MessageLog) {
+    let newMessages = messageLog.messagesSince(this.lastMessageIndex);
+
+    newMessages.forEach((msg) => {
+      this.appendMessage(msg);
+    });
+
+    if (newMessages.length > 0) {
+      let lastMessage = newMessages[newMessages.length - 1];
+      this.lastMessageIndex = lastMessage.indexNumber;
+    }
+  }
+
+  appendMessage(message: MessageModel) {
+    let log = this.ui.querySelector('.log');
+    let p = document.createElement('p');
+    p.textContent = message.content;
+    log.appendChild(p);
   }
 
   handleInput(inputVal) {

@@ -68,13 +68,11 @@ footer {
     border: 1px solid #bbb;
     padding: 12px;
     margin-bottom: 12px;
+    height: 88px;
+    overflow-y: scroll;
 }
 
 .message-ui .log p {
     margin-top: 0;
     margin-bottom: 8px;
-}
-
-.message-ui .log p:last-child {
-    margin-bottom: 0;
 }

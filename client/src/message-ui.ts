@@ -39,6 +39,7 @@ export class MessageUI {
     let p = document.createElement('p');
     p.textContent = message.content;
     log.appendChild(p);
+    log.scrollTop = log.scrollHeight;
   }
 
   handleInput(inputVal) {

@@ -62,3 +62,19 @@ footer {
     display: block;
     width: 98%;
 }
+
+.message-ui .log {
+    background-color: white;
+    border: 1px solid #bbb;
+    padding: 12px;
+    margin-bottom: 12px;
+}
+
+.message-ui .log p {
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+
+.message-ui .log p:last-child {
+    margin-bottom: 0;
+}

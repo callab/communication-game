@@ -217,6 +217,8 @@ export class MapScene extends Scene {
     this.map = null;
     this.avatar = null;
     this.avatars = null;
+    this.messageUI.shutdown();
+    this.messageUI = null;
     this.scene.stop('hud');
   }
 }

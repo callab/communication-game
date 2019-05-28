@@ -69,6 +69,10 @@ export class HUDScene extends Scene {
   }
 
   updateAuthoritative(state: GameModel) {
+    if (!this.oreText) {
+      return;
+    }
+
     let ores = state.client.inventory.ores;
     this.oreText.text = ores.toString();
   }

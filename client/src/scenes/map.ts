@@ -188,7 +188,7 @@ export class MapScene extends Scene {
       KeyCodes.DOWN,
       KeyCodes.LEFT,
       KeyCodes.RIGHT,
-      KeyCodes.SPACE
+      KeyCodes.FORWARD_SLASH
     ];
 
     keyCodes.forEach((code) => {

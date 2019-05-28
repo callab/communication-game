@@ -67,6 +67,8 @@ export class MapScene extends Scene {
     this.keys = {};
     this.messageLog = new MessageLog();
 
+    (window as any).mapScene = this;
+
     this.add.image(400, 300, 'sky');
 
     this.map = this.make.tilemap({ key: 'map' });
@@ -119,7 +121,7 @@ export class MapScene extends Scene {
 
   update(time: number, deltaTime: number) {
     let keysDown = this.keysDown;
-    this.socket.sendInput(keysDown, this.messageLog.lastMessageIndex);
+    this.socket.sendInput(keysDown, this.messageLog.asJSON());
     //this.avatar.handleInput(keysDown);
     this.avatar.update(time, deltaTime);
 
@@ -128,7 +130,6 @@ export class MapScene extends Scene {
 
   // Update based on response from server
   updateAuthoritative(state: GameModel) {
-    console.log(state);
     if (!this.avatars.get(state.clientId)) {
       this.avatars.set(state.clientId, this.avatar);
     }

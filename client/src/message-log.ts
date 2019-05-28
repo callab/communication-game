@@ -2,6 +2,7 @@ import { MessageModel } from './models/message-model';
 
 export class MessageLog {
   messages: MessageModel[] = [];
+  pendingMessages: string[] = [];
 
   get lastMessageIndex() {
     if (this.messages.length > 0) {
@@ -12,6 +13,10 @@ export class MessageLog {
     }
   }
 
+  sendMessage(msg) {
+    this.pendingMessages.push(msg);
+  };
+
   updateAuthoritative(messages: MessageModel[]) {
     let newMessages = messages.filter((msg) => {
       return msg.indexNumber > this.lastMessageIndex;
@@ -19,6 +24,18 @@ export class MessageLog {
 
     newMessages.forEach((msg) => {
       this.messages.push(msg);
+
+      let index = this.pendingMessages.indexOf(msg.content);
+      if (index >= 0) {
+        this.pendingMessages.splice(index, 1);
+      }
     });
+  }
+
+  asJSON() {
+    return {
+      lastMessageIndex: this.lastMessageIndex,
+      pendingMessages: this.pendingMessages
+    };
   }
 }

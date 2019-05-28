@@ -52,3 +52,13 @@ footer {
     text-align: center;
     color: gray;
 }
+
+.message-ui {
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.message-ui input {
+    display: block;
+    width: 98%;
+}

@@ -11,6 +11,7 @@ import { GameModel } from '../models/game-model';
 import { MapModel } from '../models/map-model';
 import { Timer } from '../timer';
 import { MessageLog } from '../message-log';
+import { MessageUI } from '../message-ui';
 import * as Util from '../util';
 
 const KeyCodes = Input.Keyboard.KeyCodes;
@@ -26,6 +27,7 @@ export class MapScene extends Scene {
   private socket: Socket;
   private timer: Timer;
   private messageLog: MessageLog;
+  private messageUI: MessageUI;
 
   constructor() {
     super({
@@ -66,6 +68,10 @@ export class MapScene extends Scene {
     this.avatars = new Map<number, Avatar>();
     this.keys = {};
     this.messageLog = new MessageLog();
+    this.messageUI = new MessageUI();
+    this.messageUI.onInput = (inputVal) => {
+      this.handleMessageBoxInput(inputVal);
+    };
 
     (window as any).mapScene = this;
 
@@ -171,6 +177,10 @@ export class MapScene extends Scene {
       }
     }
   }
+
+  handleMessageBoxInput(inputVal) {
+    this.messageLog.sendMessage(inputVal);
+  };
 
   registerKeyListeners() {
     let keyCodes = [

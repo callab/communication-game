@@ -64,7 +64,7 @@ footer {
 }
 
 .message-ui .log {
-    background-color: white;
+    background-color: black;
     border: 1px solid #bbb;
     padding: 12px;
     margin-bottom: 12px;
@@ -75,4 +75,16 @@ footer {
 .message-ui .log p {
     margin-top: 0;
     margin-bottom: 8px;
+}
+
+.message-ui .log p.client-id-1 {
+    color: #ff9999;
+}
+
+.message-ui .log p.client-id-2 {
+    color: #99ff99;
+}
+
+.message-ui .log p.client-id-3 {
+    color: #ffff99;
 }

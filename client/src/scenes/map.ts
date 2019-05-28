@@ -16,8 +16,6 @@ import * as Util from '../util';
 
 const KeyCodes = Input.Keyboard.KeyCodes;
 
-const TINTS = [0xff9999, 0x99ff99, 0xffff99];
-
 // Scene for map exploration part of the game
 export class MapScene extends Scene {
   private map: Tilemaps.Tilemap;
@@ -142,14 +140,15 @@ export class MapScene extends Scene {
 
     if (!this.avatars.get(state.clientId)) {
       this.avatars.set(state.clientId, this.avatar);
+      this.avatar.setTint(state.clientId - 1);
     }
 
     state.avatars.forEach((model) => {
       let avatar = this.avatars.get(model.clientId);
       if (!avatar) {
         let sprite = this.add.sprite(0, 0, 'astronaut', 0);
-        let tint = TINTS[(model.clientId - 1) % TINTS.length];
-        avatar = new Avatar(sprite, this.map, 5, tint);
+        avatar = new Avatar(sprite, this.map, 5);
+        avatar.setTint(model.clientId - 1);
         avatar.mapRelativePosition = model.position;
         this.avatars.set(model.clientId, avatar);
       }

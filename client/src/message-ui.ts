@@ -38,6 +38,7 @@ export class MessageUI {
     let log = this.ui.querySelector('.log');
     let p = document.createElement('p');
     p.textContent = message.content;
+    p.classList.add('client-id-' + message.clientId);
     log.appendChild(p);
     log.scrollTop = log.scrollHeight;
   }

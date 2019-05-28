@@ -6,6 +6,8 @@ type KeyDict = { [code: number]: boolean };
 const Vector2 = Math.Vector2;
 const KeyCodes = Input.Keyboard.KeyCodes;
 
+const TINTS = [0xff9999, 0x99ff99, 0xffff99];
+
 export class Avatar {
   private sprite: GameObjects.Sprite;
   private map: Tilemaps.Tilemap;
@@ -34,12 +36,16 @@ export class Avatar {
     this.sprite.setPosition(vec.x, vec.y);
   }
 
-  constructor(sprite, map, speed = 1, tint = 0xffffff) {
+  constructor(sprite, map, speed = 1) {
     this.sprite = sprite;
     this.map = map;
     this.speed = speed;
-    this.sprite.tint = tint;
     this.oreFlasher = new OreFlasher(this.map);
+  }
+
+  setTint(index) {
+    console.log(`Setting tint with index: ${index}`);
+    this.sprite.tint = TINTS[index % TINTS.length];
   }
 
   handleInput(keys: KeyDict) { }

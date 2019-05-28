@@ -1,6 +1,7 @@
 import { ClientModel } from './client-model';
 import { AvatarModel } from './avatar-model';
 import { MapModel } from './map-model';
+import { MessageModel } from './message-model';
 
 export class GameModel {
   clientId: number;
@@ -8,6 +9,7 @@ export class GameModel {
   avatars: AvatarModel[];
   timeRemaining: number;
   map: MapModel;
+  messages: MessageModel[];
 
   get client() {
     return this.clients.find((client) => client.id == this.clientId);
@@ -23,5 +25,9 @@ export class GameModel {
 
     this.timeRemaining = jsonObj.timeRemaining;
     this.map = new MapModel(jsonObj.map);
+
+    this.messages = jsonObj.messages.map((jsonObj) => {
+      return new MessageModel(jsonObj);
+    });
   }
 }

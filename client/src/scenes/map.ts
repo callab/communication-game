@@ -10,6 +10,7 @@ import { Avatar } from '../avatar/avatar';
 import { GameModel } from '../models/game-model';
 import { MapModel } from '../models/map-model';
 import { Timer } from '../timer';
+import { MessageLog } from '../message-log';
 import * as Util from '../util';
 
 const KeyCodes = Input.Keyboard.KeyCodes;
@@ -24,6 +25,7 @@ export class MapScene extends Scene {
   private keys: { [code: number]: Input.Keyboard.Key } = {};
   private socket: Socket;
   private timer: Timer;
+  private messageLog: MessageLog;
 
   constructor() {
     super({
@@ -63,6 +65,7 @@ export class MapScene extends Scene {
   create() {
     this.avatars = new Map<number, Avatar>();
     this.keys = {};
+    this.messageLog = new MessageLog();
 
     this.add.image(400, 300, 'sky');
 
@@ -116,7 +119,7 @@ export class MapScene extends Scene {
 
   update(time: number, deltaTime: number) {
     let keysDown = this.keysDown;
-    this.socket.sendInput(keysDown);
+    this.socket.sendInput(keysDown, this.messageLog.lastMessageIndex);
     //this.avatar.handleInput(keysDown);
     this.avatar.update(time, deltaTime);
 
@@ -145,6 +148,8 @@ export class MapScene extends Scene {
 
     this.timer.updateAuthoritative(state.timeRemaining);
     this.updateMap(state.map);
+
+    this.messageLog.updateAuthoritative(state.messages);
 
     if (this.timer.stopped) {
       this.transitionToScoreScene(state);

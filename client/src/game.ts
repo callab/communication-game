@@ -6,6 +6,8 @@ import {
   ScoreScene
 } from './scenes/scenes';
 
+import { MessageLog } from './message-log';
+
 const WIDTH = 800;
 const HEIGHT = 600;
 
@@ -22,5 +24,7 @@ let config = {
   },
   scene: [ SplashScene, MapScene, HUDScene, ScoreScene ]
 };
+
+let messageLog = new MessageLog();
 
 let game = new Phaser.Game(config);

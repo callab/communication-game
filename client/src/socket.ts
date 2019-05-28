@@ -19,12 +19,13 @@ export class Socket {
     this.setStatus('Connecting...');
   }
 
-  sendInput(keysDown: { [code: number]: boolean }) {
-    let str = JSON.stringify({
-      keys: keysDown
-    });
+  sendInput(keysDown: { [code: number]: boolean }, lastMessageIndex: number) {
+    let payload = {
+      keys: keysDown,
+      lastMessageIndex: lastMessageIndex
+    };
 
-    this.send(str);
+    this.send(JSON.stringify(payload));
   }
 
   send(message: string) {

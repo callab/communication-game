@@ -75,7 +75,7 @@ export class MessageUI {
 
     while ((result = regex.exec(message)) !== null) {
       let word = result[0];
-      if (!this.allowedWords.has(word)) {
+      if (!this.allowedWords.has(word.toLowerCase())) {
         badWords.push(word);
       }
     }

@@ -40,4 +40,4 @@ def deploy(c):
         c.run('./start.sh')
 
     with c.cd('/srv/app'):
-        c.run(f"ln -sf {git_ref} current")
+        c.run(f"ln -sfn {git_ref} current")

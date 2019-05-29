@@ -57,6 +57,18 @@ class DB {
                 });
   }
 
+  recordGame(teamScore, messages) {
+    this.db.run(`INSERT INTO played_games (
+                  team_score, time_finished, messages
+                 ) VALUES (?, datetime('now'), ?)`,
+                 [teamScore, messages.join(',')],
+                 (err) => {
+                   if (err) {
+                     console.error(err);
+                   }
+                 });
+  }
+
   close() {
     this.db.close();
   }

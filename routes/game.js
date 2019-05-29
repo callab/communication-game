@@ -56,7 +56,7 @@ module.exports = function (app) {
       let path = 'server-maps/next.json';
       let str = fs.readFileSync(path);
       let map = new Map(JSON.parse(str));
-      games.push(new Game(map));
+      games.push(new Game(app, map));
     }
 
     games[games.length - 1].addClient(ws);

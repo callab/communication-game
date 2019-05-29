@@ -44,7 +44,6 @@ export class Avatar {
   }
 
   setTint(index) {
-    console.log(`Setting tint with index: ${index}`);
     this.sprite.tint = TINTS[index % TINTS.length];
   }
 

@@ -134,10 +134,6 @@ export class MapScene extends Scene {
 
   // Update based on response from server
   updateAuthoritative(state: GameModel) {
-    if (state.messages.length > 0) {
-      console.log(state);
-    }
-
     if (!this.avatars.get(state.clientId)) {
       this.avatars.set(state.clientId, this.avatar);
       this.avatar.setTint(state.clientId - 1);

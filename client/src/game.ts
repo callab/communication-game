@@ -26,5 +26,10 @@ let config = {
 };
 
 let messageLog = new MessageLog();
+messageLog.fetchAllowedWords((err) => {
+  if (err) {
+    console.error(err);
+  }
 
-let game = new Phaser.Game(config);
+  let game = new Phaser.Game(config);
+});

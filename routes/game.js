@@ -30,6 +30,19 @@ module.exports = function (app) {
     });
   });
 
+  router.get('/words', (req, res) => {
+    app.db.allAllowedWords((err, words) => {
+      if (words) {
+        res.json({
+          words: words
+        });
+      }
+      else {
+        req.status(500);
+      }
+    });
+  });
+
   router.ws('/socket', (ws, req) => {
     console.log('Websocket request received.');
     console.log(`Websocket state: ${ws.readyState}.`);

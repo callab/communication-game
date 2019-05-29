@@ -69,6 +69,21 @@ class DB {
                  });
   }
 
+  allAllowedWords(callback) {
+    this.db.all('SELECT word FROM allowed_words', (err, rows) => {
+      if (err) {
+        console.error(err);
+        callback(err, null);
+      }
+      else if (rows) {
+        callback(null, rows.map((row) => row.word));
+      }
+      else {
+        callback(null, null);
+      }
+    });
+  }
+
   close() {
     this.db.close();
   }

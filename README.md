@@ -32,7 +32,7 @@ Running `yarn db` will load [the schema file](schema.sql) into a new database.
 (You must have [SQLite](https://www.sqlite.org/index.html) installed; you can
 easily install SQLite with [Homebrew](https://brew.sh/).)
 
-Once you have created the database, run `yarn start` to launch the server
+Once you have created the database, run `yarn dev` to launch the server
 process.
 
 The backend service uses [passport.js](http://www.passportjs.org/) as
@@ -43,8 +43,8 @@ configured.
 
 In development, the express app is responsible for serving the client .js
 bundle from the `/public` folder. In production, the express app still needs to
-render a template with the correct script tag, but static files are served by
-Nginx.
+render a template with the correct script tag, but static files are (should
+be?) served by Nginx.
 
 ### Deployment
 [Fabric](http://docs.fabfile.org/en/2.4/index.html), a Python library, is used
@@ -136,3 +136,7 @@ Install sqlite:
 ```
 $ sudo apt-get install sqlite
 ```
+
+## Tiled
+The maps stored under [/public/maps](./public/maps) are created using the
+[Tiled map editor](https://www.mapeditor.org/).

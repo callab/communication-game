@@ -20,7 +20,6 @@ module.exports = function init(app, config) {
   initTemplateEngine(app);
   initAuth(app);
   initMiddleware(app);
-  initGame(app);
 }
 
 function initDatabase(app) {
@@ -93,13 +92,4 @@ function initMiddleware(app) {
   app.use(passport.session());
 
 //  app.use(sessionLogger());
-}
-
-function initGame(app) {
-  // load server map
-  let path = 'server-maps/next.json';
-  let str = fs.readFileSync(path);
-  let map = new Map(JSON.parse(str));
-
-  app.game = new Game(map);
 }

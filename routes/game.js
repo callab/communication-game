@@ -8,6 +8,7 @@ const WS_OPEN = 1;
 
 module.exports = function (app) {
   let router = express.Router();
+  let games = [];
 
   router.get('/', (req, res) => {
     let bundleName = app.config.clientBundleName;
@@ -48,15 +49,17 @@ module.exports = function (app) {
   });
 
   function handleClient(ws) {
-    if (app.game.stopped) {
+    games = games.filter((game) => !game.stopped);
+
+    if (games.length == 0 || games[games.length - 1].isFull()) {
       // load server map
       let path = 'server-maps/next.json';
       let str = fs.readFileSync(path);
       let map = new Map(JSON.parse(str));
-      app.game = new Game(map);
+      games.push(new Game(map));
     }
 
-    app.game.addClient(ws);
+    games[games.length - 1].addClient(ws);
   };
 
   return router;

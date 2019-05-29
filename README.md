@@ -1,7 +1,7 @@
 # Unnamed Extremely Entertaining Game
 A work in progress!
 
-![](./screenshot.png)
+![](./docs/screenshot.png)
 
 ## Project Organization
 This repo contains both the backend service and the game client. Both are

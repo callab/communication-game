@@ -25,11 +25,32 @@ let config = {
   scene: [ SplashScene, MapScene, HUDScene, ScoreScene ]
 };
 
-let messageLog = new MessageLog();
-messageLog.fetchAllowedWords((err) => {
+fetchAllowedWords((err, words) => {
   if (err) {
     console.error(err);
   }
 
+  (window as any).allowedWords = words;
   let game = new Phaser.Game(config);
 });
+
+function fetchAllowedWords(callback) {
+  let req = new XMLHttpRequest();
+  req.open('GET', '/game/words', true);
+
+  req.onload = () => {
+    if (req.status >= 200 && req.status < 400) {
+      let data = JSON.parse(req.responseText);
+      callback(null, data.words);
+    }
+    else {
+      callback(`HTTP Status: ${req.status}.`, null);
+    }
+  }
+
+  req.onerror = () => {
+    callback(`HTTP Status: ${req.status}.`, null);
+  }
+
+  req.send();
+}

@@ -3,7 +3,6 @@ import { MessageModel } from './models/message-model';
 export class MessageLog {
   messages: MessageModel[] = [];
   pendingMessages: string[] = [];
-  allowedWords: Set<string> = new Set<string>();
 
   get lastMessageIndex() {
     if (this.messages.length > 0) {
@@ -36,34 +35,6 @@ export class MessageLog {
 
   messagesSince(index) {
     return this.messages.slice(index + 1);
-  }
-
-  fetchAllowedWords(callback) {
-    let req = new XMLHttpRequest();
-    req.open('GET', '/game/words', true);
-
-    req.onload = () => {
-      if (req.status >= 200 && req.status < 400) {
-        let data = JSON.parse(req.responseText);
-        this.updateAllowedWords(data.words);
-        callback(null);
-      }
-      else {
-        callback(`HTTP Status: ${req.status}.`);
-      }
-    }
-
-    req.onerror = () => {
-      callback(`HTTP Status: ${req.status}.`);
-    }
-
-    req.send();
-  }
-
-  updateAllowedWords(wordList) {
-    wordList.forEach((word) => {
-      this.allowedWords.add(word);
-    });
   }
 
   asJSON() {

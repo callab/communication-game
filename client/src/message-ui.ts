@@ -5,6 +5,7 @@ const CENSOR_PLACEHOLDER = '****';
 
 export class MessageUI {
   ui: HTMLElement;
+  log: HTMLElement;
   input: HTMLInputElement;
   onInput: (inputVal) => void = (inputVal) => {};
   lastMessageIndex: number = -1;
@@ -13,6 +14,9 @@ export class MessageUI {
   constructor() {
     this.ui = document.querySelector('.message-ui');
     this.ui.classList.remove('hidden');
+
+    this.log = this.ui.querySelector('.log');
+    this.clearLog();
 
     this.input = document.querySelector('.message-ui input') as HTMLInputElement;
     this.input.addEventListener('keypress', (e) => {
@@ -39,17 +43,22 @@ export class MessageUI {
   }
 
   appendMessage(message: MessageModel) {
-    let log = this.ui.querySelector('.log');
     let p = document.createElement('p');
     p.textContent = this.censor(message.content);
     p.classList.add('client-id-' + message.clientId);
-    log.appendChild(p);
-    log.scrollTop = log.scrollHeight;
+    this.log.appendChild(p);
+    this.log.scrollTop = this.log.scrollHeight;
   }
 
   handleInput(inputVal) {
     this.input.value = '';
     this.onInput(inputVal);
+  }
+
+  clearLog() {
+    while (this.log.firstChild) {
+      this.log.removeChild(this.log.firstChild);
+    }
   }
 
   updateAllowedWords(wordList) {

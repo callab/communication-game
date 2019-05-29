@@ -14,8 +14,10 @@ export class MessageLog {
   }
 
   sendMessage(msg) {
-    console.log(`Sending message: ${msg}`);
-    this.pendingMessages.push(msg);
+    if (msg && msg.length > 0) {
+      console.log(`Sending message: ${msg}`);
+      this.pendingMessages.push(msg);
+    }
   };
 
   updateAuthoritative(messages: MessageModel[]) {

@@ -23,5 +23,3 @@ CREATE TABLE allowed_words (
     id integer PRIMARY KEY,
     word TEXT
 );
-
-CREATE UNIQUE INDEX idx_allowed_word ON allowed_words (word);

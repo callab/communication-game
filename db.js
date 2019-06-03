@@ -70,7 +70,7 @@ class DB {
   }
 
   allAllowedWords(callback) {
-    this.db.all('SELECT word FROM allowed_words', (err, rows) => {
+    this.db.all('SELECT DISTINCT word FROM allowed_words', (err, rows) => {
       if (err) {
         console.error(err);
         callback(err, null);
